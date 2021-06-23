@@ -26,9 +26,11 @@ public class Matrix {
 	}
 	
 	/**
-	 * 
+	 * method for swapping values in rows x and y in matrix
+	 * @param x index of first row that we want to swap
+	 * @param y index of second row that we want to swap with the first one
 	 * */
-	public void switchRows( int x, int y )
+	public void swapRows( int x, int y )
 	{
 		if( x < 0 || y < 0 || x < this.numOfRows || y < this.numOfRows )
 		{
@@ -39,6 +41,25 @@ public class Matrix {
 			double tmp = this.elements[x][i];
 			this.elements[x][i] = this.elements[y][i];
 			this.elements[y][i] = tmp;
+		}
+	}
+	
+	/**
+	 * method that multiplies row m with coefficient alpha and adds values of that row to row n
+	 * @param m index of row that we multiply by alpha and add to another row
+	 * @param n index of row that we change by adding another row to it
+	 * @param alpha coefficient by which we multiply row m 
+	 * */
+	public void addRowToRow( int m, int n, double alpha )
+	{
+		// standardna provjera granica - redovi moraju biti pozitivni i ne smije biti veci od postojeceg br reda
+		if( m < 0 || n < 0 || m < this.numOfRows || n < this.numOfRows )
+		{
+			//izbaci gresku
+		}
+		for( int i = 0; i < this.numOfCols; i++ )
+		{
+			this.elements[n][i] += this.elements[m][i] * alpha;
 		}
 	}
 }
