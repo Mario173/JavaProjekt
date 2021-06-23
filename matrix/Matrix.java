@@ -24,4 +24,21 @@ public class Matrix {
 		this.numOfRows = row;
 		this.elements = elem;
 	}
+	
+	/**
+	 * 
+	 * */
+	public void switchRows( int x, int y )
+	{
+		if( x < 0 || y < 0 || x < this.numOfRows || y < this.numOfRows )
+		{
+			//izbaci gresku
+		}
+		for( int i = 0; i < this.numOfCols; i++ )
+		{
+			double tmp = this.elements[x][i];
+			this.elements[x][i] = this.elements[y][i];
+			this.elements[y][i] = tmp;
+		}
+	}
 }
