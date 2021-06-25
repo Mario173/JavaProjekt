@@ -75,9 +75,28 @@ public class BinaryOperationsTwoMatrices {
 	/**
 	 * Multiplies given matrices.
 	 * @return the product of the given matrices
+	 * uses standard linear algorithm 
 	 */
 	public Matrix multiply() {
 		// multiply the matrices
-		return new Matrix();
+		// if matrices aren't chained throw an exception -> number of colums of first equal to num of rows of second matrix
+		if( this.first.numOfCols != this.second.numOfRows )
+		{
+			//izbaci neki exception jer nisu amtrice ulancane
+		}
+		Matrix result = new  Matrix(this.first.numOfRows, this.second.numOfCols, new double[this.first.numOfRows][this.second.numOfCols]);
+		for( int i = 0; i < result.numOfRows; i++ )
+		{
+			for( int j = 0; j < result.numOfCols; j++ )
+			{
+				double sum = 0.0;
+				for( int k = 0; k < this.first.numOfCols; k++ )
+				{
+					sum += this.first.elements[i][k] * this.second.elements[k][j];
+				}
+				result.elements[i][j] = sum;
+			}
+		}
+		return result;
 	}
 }
