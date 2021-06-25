@@ -1,7 +1,17 @@
 package main;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
+import exceptions.WrongInsertException;
 import matrix.Matrix;
 
 /**
@@ -21,29 +31,93 @@ public class Insert {
 	}
 	
 	/**
-	 * Method used for in serting matrices from database
+	 * Method used for inserting matrices from database
 	 */
 	public void insertFromDatabase() {
 		
 	}
 	
 	/**
+	 * For reading characters from a file char by char
+	 * @param reader
+	 * @throws IOException
+	 */
+	@SuppressWarnings("unused")
+	private static void handleCharacters(Reader reader) throws IOException {
+        int r;
+        int read = 0, i = 0, j = 0;
+        int numOfRows = 0, numOfCols = 0;
+        ArrayList<ArrayList<Double>> values = new ArrayList<>();
+        double[][] arr;
+        String s = new String();
+        
+        while ((r = reader.read()) != -1) {
+        	if(read == 0 && (char)r != ' ') {
+        		numOfRows = r;
+        		read++;
+        	}
+        	if(read == 1 && (char)r != ' ') {
+        		numOfCols = r;
+        		read++;
+        	}
+        	
+        	if((char)r == ' ') {
+        		try {
+        			values.get(i).add(Double.parseDouble(s));
+        			j++;
+        			if(j == numOfCols) {
+        				j = 0;
+        				i++;
+        				if(i > numOfRows) {
+        					
+        				}
+        			}
+        		} catch(NullPointerException e) {
+        			e.printStackTrace();
+        			return;
+        		} catch(NumberFormatException f) {
+        			f.printStackTrace();
+        			return;
+        		}
+        		continue;
+        	} else if(true) {
+        		// malo to jos razradi poslije
+        	}
+            System.out.println("Do something with " + r);
+        }
+    }
+	
+	/**
 	 * Method used for inserting matrices from files
 	 * @param filePath string representing path to the file
 	 */
 	public void insertFromFile(String filePath) {
-		
+		try {
+			File myFile = new File(filePath);
+			InputStream in = new FileInputStream(myFile);
+            Reader reader = new InputStreamReader(in, Charset.defaultCharset());
+            // buffer for efficiency
+            Reader buffer = new BufferedReader(reader);
+            handleCharacters(buffer);
+		} catch(FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		} catch(IOException f) {
+			f.printStackTrace();
+			return;
+		}
 	}
 	
 	/**
 	 * Method used for inserting matrices from the text box
 	 * @param matrix string representation of a matrix
+	 * @throws WrongInsertException if there's an error during the insert
 	 */
-	public void insertFromTextBox(String matrix) {
+	public void insertFromTextBox(String matrix) throws WrongInsertException {
 		@SuppressWarnings("unused")
 		int i = 0, numOfRows = 0, numOfCols = 0, countElements = 0, countParentheses = 0;
 		ArrayList<ArrayList<Double>> values = new ArrayList<>(); // 
-		matrix = matrix.trim(); // remove all leading and trailing whitespaces
+		matrix = matrix.replaceAll("\\s+",""); // remove all whitespaces
 		while(i != matrix.length()) {
 			Character curr = matrix.charAt(i);
 			if(curr == '{') {
@@ -52,7 +126,8 @@ public class Insert {
 				countParentheses--;
 				numOfRows++;
 				if(i != matrix.length() - 1 && numOfCols != countElements) {
-					// baci gresku jer nisu svi redovi isto veliki
+					// not all rows are the same size
+					throw new WrongInsertException("All rows need to be the same size!");
 				}
 				countElements = 0;
 			} else if(Character.isDigit(curr)) {
@@ -64,16 +139,36 @@ public class Insert {
 				}
 				i--;
 				try {
-					values.get(numOfRows).add(Double.parseDouble(s)); // malo bolje taj try-catch
-				} catch(Exception e) {
+					values.get(numOfRows).add(Double.parseDouble(s));
+				} catch(NullPointerException e) {
 					e.printStackTrace();
+					return;
+				} catch(NumberFormatException f) {
+					f.printStackTrace();
+					return;
 				}
 				countElements++;
 			} else {
-				// nije dobro -> baci gresku
+				// a symbol that is not a number, ',', '.', '{' or '}'
+				throw new WrongInsertException("Invalid symbol!");
 			}
 		}
-		// ne return nego ga sibni u memoriju pa cemo je od tamo vadit
-		// return new Matrix(numOfRows, numOfCols, values);
+		if(countParentheses > 0) {
+			// wrong number of parentheses
+			throw new WrongInsertException("Too many { parentheses!");
+		}
+		if(countParentheses < 0) {
+			// wrong number of parentheses
+			throw new WrongInsertException("Too many } parentheses!");
+		}
+		this.lastInserted.numOfRows = numOfRows;
+		this.lastInserted.numOfCols = numOfCols;
+		double[][] arr = new double[numOfRows][numOfCols];
+		for(int j = 0; j < numOfRows; j++) {
+			for(int k = 0; k < numOfCols; k++) {
+				arr[j][k] = values.get(j).get(k);
+			}
+		}
+		this.lastInserted.elements = arr;
 	}
 }
