@@ -41,37 +41,40 @@ public class Insert {
 	 * For reading characters from a file char by char
 	 * @param reader
 	 * @throws IOException
+	 * @throws WrongInsertException 
 	 */
 	@SuppressWarnings("unused")
-	private static void handleCharacters(Reader reader) throws IOException {
+	protected void handleCharacters(Reader reader) throws IOException, WrongInsertException {
         int r;
         int read = 0, i = 0, j = 0;
         int numOfRows = 0, numOfCols = 0;
         ArrayList<ArrayList<Double>> values = new ArrayList<>();
-        double[][] arr;
         String s = new String();
         
         while ((r = reader.read()) != -1) {
-        	if(read == 0 && (char)r != ' ') {
+        	char curr = (char)r;
+        	
+        	if(read == 0 && curr != ' ') {
         		numOfRows = r;
         		read++;
         	}
-        	if(read == 1 && (char)r != ' ') {
+        	if(read == 1 && curr != ' ') {
         		numOfCols = r;
         		read++;
         	}
         	
-        	if((char)r == ' ') {
+        	if(curr == ' ') {
         		try {
         			values.get(i).add(Double.parseDouble(s));
+        			s = "";
         			j++;
         			if(j == numOfCols) {
         				j = 0;
         				i++;
-        				if(i > numOfRows) {
-        					
-        				}
         			}
+    				if(i >= numOfRows && j > 0) {
+    					throw new WrongInsertException("Too many symbols! Expected: " + (numOfRows * numOfCols));
+    				}
         		} catch(NullPointerException e) {
         			e.printStackTrace();
         			return;
@@ -80,11 +83,27 @@ public class Insert {
         			return;
         		}
         		continue;
-        	} else if(true) {
-        		// malo to jos razradi poslije
+        	} else if(curr == '.' || Character.isDigit(curr)) {
+        		s += curr;
+        	} else {
+        		// a symbol that is not a number, '.' or ' '
+				throw new WrongInsertException("Invalid symbol!");
         	}
             System.out.println("Do something with " + r);
         }
+        if(j != 0 || i != numOfRows) {
+			throw new WrongInsertException("Not enough symbols! Expected: " + (numOfRows * numOfCols));
+        }
+        
+        this.lastInserted.numOfRows = numOfRows;
+        this.lastInserted.numOfCols = numOfCols;
+        double[][] arr = new double[numOfRows][numOfCols];
+		for(j = 0; j < numOfRows; j++) {
+			for(int k = 0; k < numOfCols; k++) {
+				arr[j][k] = values.get(j).get(k);
+			}
+		}
+		this.lastInserted.elements = arr; 
     }
 	
 	/**
@@ -104,6 +123,9 @@ public class Insert {
 			return;
 		} catch(IOException f) {
 			f.printStackTrace();
+			return;
+		} catch(WrongInsertException w) {
+			System.out.println(w.message);
 			return;
 		}
 	}
