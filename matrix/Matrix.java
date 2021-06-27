@@ -49,15 +49,16 @@ public class Matrix {
 	 * @param m index of row that we multiply by alpha and add to another row
 	 * @param n index of row that we change by adding another row to it
 	 * @param alpha coefficient by which we multiply row m 
+	 * @param pocetak defaultna vrijednost je 0 i kaze od kojeg se stupca krene s dodavanjem
 	 * */
-	public void addRowToRow( int m, int n, double alpha )
+	public void addRowToRow( int m, int n, double alpha, int pocetak )
 	{
 		// standardna provjera granica - redovi moraju biti pozitivni i ne smije biti veci od postojeceg br reda
 		if( m < 0 || n < 0 || m < this.numOfRows || n < this.numOfRows )
 		{
 			//izbaci gresku
 		}
-		for( int i = 0; i < this.numOfCols; i++ )
+		for( int i = pocetak; i < this.numOfCols; i++ )
 		{
 			this.elements[n][i] += this.elements[m][i] * alpha;
 		}
