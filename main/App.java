@@ -2,12 +2,15 @@ package main;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Text;
+
+import exceptions.WrongInsertException;
+
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.events.SelectionAdapter;
 
@@ -122,6 +125,26 @@ public class App {
 		lblInsertMatrix1.setText("Insert Matrix:");
 		
 		Button btnInsert = new Button(shlMatrixCalculator, SWT.NONE);
+		btnInsert.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Insert i = new Insert();
+				try {
+					i.insertFromTextBox(textInsert.getText());
+					System.out.println("Cols: " + i.lastInserted.numOfCols);
+					System.out.println("Rows: " + i.lastInserted.numOfRows);
+					System.out.print("Elements: ");
+					for(int j = 0; j < i.lastInserted.numOfRows; j++) {
+						for(int k = 0; k < i.lastInserted.numOfCols; k++) {
+							System.out.print(i.lastInserted.elements[j][k] + " ");
+						}
+					}
+				} catch (WrongInsertException e1) {
+					// TODO Auto-generated catch block
+					MessageDialog.openError(shlMatrixCalculator, "Error", e1.message);
+				}
+			}
+		});
 		btnInsert.setBounds(139, 211, 90, 30);
 		btnInsert.setText("Insert Matrix");
 		

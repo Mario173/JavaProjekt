@@ -138,13 +138,18 @@ public class Insert {
 	public void insertFromTextBox(String matrix) throws WrongInsertException {
 		@SuppressWarnings("unused")
 		int i = 0, numOfRows = 0, numOfCols = 0, countElements = 0, countParentheses = 0;
-		ArrayList<ArrayList<Double>> values = new ArrayList<>(); // 
+		ArrayList<ArrayList<Double>> values = new ArrayList<>();
 		matrix = matrix.replaceAll("\\s+",""); // remove all whitespaces
 		while(i != matrix.length()) {
 			Character curr = matrix.charAt(i);
+			System.out.println(curr + " " + matrix.length() + " " + i);
 			if(curr == '{') {
+				values.add(new ArrayList<Double>());
 				countParentheses++;
 			} else if(curr == '}') {
+				if(numOfRows == 0) {
+					numOfCols = countElements;
+				}
 				countParentheses--;
 				numOfRows++;
 				if(i != matrix.length() - 1 && numOfCols != countElements) {
@@ -152,6 +157,9 @@ public class Insert {
 					throw new WrongInsertException("All rows need to be the same size!");
 				}
 				countElements = 0;
+			} else if(curr == ',') {
+				i++;
+				continue;
 			} else if(Character.isDigit(curr)) {
 				String s = curr.toString();
 				i++;
@@ -162,6 +170,7 @@ public class Insert {
 				i--;
 				try {
 					values.get(numOfRows).add(Double.parseDouble(s));
+					countElements++;
 				} catch(NullPointerException e) {
 					e.printStackTrace();
 					return;
@@ -169,11 +178,11 @@ public class Insert {
 					f.printStackTrace();
 					return;
 				}
-				countElements++;
 			} else {
 				// a symbol that is not a number, ',', '.', '{' or '}'
 				throw new WrongInsertException("Invalid symbol!");
 			}
+			i++;
 		}
 		if(countParentheses > 0) {
 			// wrong number of parentheses
@@ -183,14 +192,16 @@ public class Insert {
 			// wrong number of parentheses
 			throw new WrongInsertException("Too many } parentheses!");
 		}
-		this.lastInserted.numOfRows = numOfRows;
-		this.lastInserted.numOfCols = numOfCols;
+		if(numOfRows != 1) {
+			numOfRows--;
+		}
 		double[][] arr = new double[numOfRows][numOfCols];
+		System.out.println(numOfCols + " " + numOfRows);
 		for(int j = 0; j < numOfRows; j++) {
 			for(int k = 0; k < numOfCols; k++) {
 				arr[j][k] = values.get(j).get(k);
 			}
 		}
-		this.lastInserted.elements = arr;
+		this.lastInserted = new Matrix(numOfCols, numOfRows, arr);
 	}
 }
