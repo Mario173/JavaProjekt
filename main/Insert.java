@@ -142,7 +142,6 @@ public class Insert {
 		matrix = matrix.replaceAll("\\s+",""); // remove all whitespaces
 		while(i != matrix.length()) {
 			Character curr = matrix.charAt(i);
-			System.out.println(curr + " " + matrix.length() + " " + i);
 			if(curr == '{') {
 				values.add(new ArrayList<Double>());
 				countParentheses++;
@@ -196,7 +195,6 @@ public class Insert {
 			numOfRows--;
 		}
 		double[][] arr = new double[numOfRows][numOfCols];
-		System.out.println(numOfCols + " " + numOfRows);
 		for(int j = 0; j < numOfRows; j++) {
 			for(int k = 0; k < numOfCols; k++) {
 				arr[j][k] = values.get(j).get(k);

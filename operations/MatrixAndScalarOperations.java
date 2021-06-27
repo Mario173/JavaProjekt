@@ -1,5 +1,7 @@
 package operations;
 
+import java.util.ArrayList;
+
 import matrix.Matrix;
 
 /**
@@ -35,12 +37,30 @@ public class MatrixAndScalarOperations {
 	}
 	
 	/**
-	 * Potentiates the matrix to a given potention
+	 * Potentiates the matrix to a given potention (integer between 1 and 15)
 	 * @return the resulting matrix
 	 */
 	public Matrix potentiate() {
 		// potentiate the matrix on the given potention
-		return new Matrix();
+		ArrayList<Integer> howToExp = new ArrayList<>();
+		int exp = (int) this.scalar;
+		while(exp != 0) {
+			howToExp.add(exp % 2);
+			exp /= 2;
+		}
+		Matrix helper = this.matrix;
+		BinaryOperationsTwoMatrices multiply = new BinaryOperationsTwoMatrices(this.matrix, this.matrix);
+		for(int i = 0; i < howToExp.size(); i++) {
+			this.matrix = multiply.multiply();
+			multiply.first = this.matrix;
+			if(howToExp.get(i) == 1) {
+				multiply.second = helper;
+				this.matrix = multiply.multiply();
+				multiply.first = this.matrix;
+			}
+			multiply.second = this.matrix;
+		}
+		return this.matrix;
 	}
 
 }

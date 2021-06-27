@@ -131,14 +131,18 @@ public class App {
 				Insert i = new Insert();
 				try {
 					i.insertFromTextBox(textInsert.getText());
+					// umisto ovoga ispod (samo provjera radi li dobro) triba bit ubacivanje u bazu
 					System.out.println("Cols: " + i.lastInserted.numOfCols);
 					System.out.println("Rows: " + i.lastInserted.numOfRows);
-					System.out.print("Elements: ");
+					System.out.print("Elements: [");
 					for(int j = 0; j < i.lastInserted.numOfRows; j++) {
+						System.out.print("[");
 						for(int k = 0; k < i.lastInserted.numOfCols; k++) {
 							System.out.print(i.lastInserted.elements[j][k] + " ");
 						}
+						System.out.print("],");
 					}
+					System.out.print("]");
 				} catch (WrongInsertException e1) {
 					// TODO Auto-generated catch block
 					MessageDialog.openError(shlMatrixCalculator, "Error", e1.message);
