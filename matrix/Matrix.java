@@ -1,5 +1,7 @@
 package matrix;
 
+import exceptions.MatrixDimensionException;
+
 /**
  * Class representing a matrix
  * @author Mario
@@ -29,12 +31,13 @@ public class Matrix {
 	 * method for swapping values in rows x and y in matrix
 	 * @param x index of first row that we want to swap
 	 * @param y index of second row that we want to swap with the first one
+	 * @throws MatrixDimensionException 
 	 * */
-	public void swapRows( int x, int y )
+	public void swapRows( int x, int y ) throws MatrixDimensionException
 	{
 		if( x < 0 || y < 0 || x < this.numOfRows || y < this.numOfRows )
 		{
-			//izbaci gresku
+			throw new MatrixDimensionException("swapping rows (wrong row index)");
 		}
 		for( int i = 0; i < this.numOfCols; i++ )
 		{
@@ -50,13 +53,14 @@ public class Matrix {
 	 * @param n index of row that we change by adding another row to it
 	 * @param alpha coefficient by which we multiply row m 
 	 * @param pocetak defaultna vrijednost je 0 i kaze od kojeg se stupca krene s dodavanjem
+	 * @throws MatrixDimensionException 
 	 * */
-	public void addRowToRow( int m, int n, double alpha, int pocetak )
+	public void addRowToRow( int m, int n, double alpha, int pocetak ) throws MatrixDimensionException
 	{
 		// standardna provjera granica - redovi moraju biti pozitivni i ne smije biti veci od postojeceg br reda
 		if( m < 0 || n < 0 || m < this.numOfRows || n < this.numOfRows )
 		{
-			//izbaci gresku
+			throw new MatrixDimensionException("adding row to row (wrong row index)");
 		}
 		for( int i = pocetak; i < this.numOfCols; i++ )
 		{

@@ -2,6 +2,7 @@ package operations;
 
 import java.util.ArrayList;
 
+import exceptions.SquareMatrixException;
 import matrix.Matrix;
 
 /**
@@ -39,9 +40,13 @@ public class MatrixAndScalarOperations {
 	/**
 	 * Potentiates the matrix to a given potention (integer between 1 and 15)
 	 * @return the resulting matrix
+	 * @throws SquareMatrixException if the given matrix is not square
 	 */
-	public Matrix potentiate() {
+	public Matrix potentiate() throws SquareMatrixException {
 		// potentiate the matrix on the given potention
+		if(this.matrix.numOfCols != this.matrix.numOfRows) {
+			throw new SquareMatrixException("the power of the matrix");
+		}
 		ArrayList<Integer> howToExp = new ArrayList<>();
 		int exp = (int) this.scalar;
 		while(exp != 0) {
