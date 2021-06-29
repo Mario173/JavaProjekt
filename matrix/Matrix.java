@@ -26,6 +26,9 @@ public class Matrix {
 		this.numOfRows = row;
 		this.elements = elem;
 	}
+	public Matrix(int col, int row, String elem) {
+		//potrebno je implementirat
+	}
 	
 	/**
 	 * method for swapping values in rows x and y in matrix
