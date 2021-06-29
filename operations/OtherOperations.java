@@ -36,9 +36,21 @@ public class OtherOperations {
 	 * Method used for finding the value of the given polynomial in a given matrix
 	 * @return the resulting matrix 
 	 */
-	public Matrix calculatePolynomialValue() {
+	public Matrix calculatePolynomialValue() throws SquareMatrixException {
 		// polynomial
-		return new Matrix();
+		if(this.matrix.numOfCols != this.matrix.numOfRows) {
+			throw new SquareMatrixException("calculate polynomial");
+		}
+		double[][] zero = {};
+		Matrix result = new Matrix(this.matrix.numOfCols, this.matrix.numOfRows, zero);
+		for(int i = 0; i < this.polynomial.length; i++) {
+			MatrixAndScalarOperations pot = new MatrixAndScalarOperations(this.matrix, i);
+			pot.matrix = pot.potentiate();
+			pot.scalar = this.polynomial[i];
+			BinaryOperationsTwoMatrices add = new BinaryOperationsTwoMatrices(result, pot.scalar());
+			result = add.add();
+		}
+		return result;
 	}
 	
 	/**

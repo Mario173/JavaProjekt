@@ -26,8 +26,29 @@ public class Matrix {
 		this.numOfRows = row;
 		this.elements = elem;
 	}
+	
+	/**
+	 * Constructor when the matrix is inserted from database
+	 * @param col number of columns
+	 * @param row number of rows
+	 * @param elem string containing all elements
+	 */
 	public Matrix(int col, int row, String elem) {
 		//potrebno je implementirat
+		this.numOfCols = col;
+		this.numOfRows = row;
+		double[][] elements = new double[row][col];
+		String[] elems = elem.split(";");
+		for(int i = 0; i < row; i++) {
+			for(int j = 0; j < col; j++) {
+				try {
+					elements[i][j] = Double.parseDouble(elems[i * col + j]);
+				} catch(IndexOutOfBoundsException e) {
+					e.printStackTrace();
+					return; // mozda jos nesto jer je greska
+				}
+			}
+		}
 	}
 	
 	/**

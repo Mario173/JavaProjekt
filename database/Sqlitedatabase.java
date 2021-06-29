@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.sql.*;
 
@@ -41,8 +40,13 @@ public class Sqlitedatabase {
 		
 		String elements = "";
         for(double[] row : m.elements) {
+        	/*
         	elements += Arrays.toString(row);
-        	elements += " ";
+        	elements += " ";*/
+        	for(double elem : row) {
+        		elements += (Double.toString(elem) + ";");
+        	}
+        	
         }
         String name ="generic name"; // = m.name;
         
