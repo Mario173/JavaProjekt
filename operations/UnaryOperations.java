@@ -107,7 +107,33 @@ public class UnaryOperations {
 	 * @return the rank of the matrix
 	 */
 	public int rank() {
-		return 0;
+		// algoritam koji koristima o i pri rucnom racunanju, osim sto ne radim zaprave ponistavanja
+		// u retku, ali ponasam se kao da jesam
+		int min = Math.min(this.matrix.numOfCols, this.matrix.numOfRows), rank;
+		rank = min;
+		for( int i = 0; i < min; i++)
+		{
+			// provjera da nam nije 0 na dijagonali
+			if( this.matrix.elements[i][i] == 0 )
+			{
+				for( int k = i+1; k < this.matrix.numOfRows; k++)
+					if( this.matrix.elements[k][i] != 0 )
+						{
+							this.matrix.swapRows(i, k);
+							break;
+						}
+				// u stupcu su sve same 0, smanjiti rank za 1 i prijedi na slijedeci redak i+1
+				rank--;
+				continue;
+			}
+			// sad idemo ponistiti brojeve ispod
+			for( int j = i+1; j < this.matrix.numOfRows; j++ )
+			{
+				double k = this.matrix.elements[j][i] / this.matrix.elements[i][i];
+				this.matrix.addRowToRow(i, j, k, i);
+			}
+		}
+		return rank;
 	}
 	
 	/**
@@ -202,6 +228,34 @@ public class UnaryOperations {
 	 * @return the inverse matrix
 	 */
 	public Matrix inverse() {
-		return new Matrix();
+		// provjeri je li kvadratna, a nakon toga ima li U iz dekomp dijagonalu bez 0
+		if( matrix.numOfCols != matrix.numOfRows );
+			throw new SquareMatrixException("Nije kvadratna");
+		int n= matrix.numOfCols, i, j, k ;
+		
+		
+		// ajmo probat naivni gaussov nacin - u biti on se cini dosta zgodan za visedretvenost?
+		double[][] elem_inv = new double[n][n];
+		for( i = 0; i < n; i++ ) elem_inv[i][i] = 1;    // 1 na dijagonalu
+		Matrix inverseL = new Matrix( n, n, elem_inv );
+		for( i = 0; i < n-1; i++)
+			for( j = i+1; j < n; j++)
+			{
+				double c = - matrix.elements[j][i] / matrix.elements[i][i];
+				matrix.addRowToRow(i, j, c, 0);
+				inverseL.addRowToRow(i, j, c, 0);
+			}
+		for( i = n-1; i >= 0; i-- )
+			for( j = i-1; j>= 0; j--)
+			{
+				double c = - matrix.elements[j][i] / matrix.elements[i][i];
+				matrix.addRowToRow(i, j, c, 0);
+				inverseL.addRowToRow(i, j, c, 0);
+			}
+		for( i = 0; i < n; i++ )
+		{
+			inverseL.scaleRow(i, 1/matrix.elements[i][i] );
+		}
+		return inverseL;
 	}
 }

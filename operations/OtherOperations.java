@@ -1,5 +1,7 @@
 package operations;
 
+import java.util.ArrayList;
+
 import matrix.Matrix;
 
 /**
@@ -58,7 +60,29 @@ public class OtherOperations {
 	 * @return the matrix containing the solution
 	 */
 	public Matrix solveLinearSystem() {
-		return new Matrix();
+		int n = matrix.numOfRows;
+		double[][] solutions = new double[n][1];
+		UnaryOperations Unar = new UnaryOperations(matrix);
+		ArrayList<Matrix> LU = Unar.LUDecomposition();
+		Matrix L = LU.get(1), U = LU.get(2);
+		// rjesavamo U = b
+		for( int i = n-1; i >=0; i--)
+		{
+			double k = U.elements[i][i], sum = 0.0;
+			for( int j = n-1; j > i; j-- )
+				sum += solutions[j][1]*U.elements[i][j];
+			solutions[i][1] = ((double) this.polynomial[i] - sum)/k;
+		}
+		// sad idemo rijesiti L = y. sad je super sto su na dijagonali sve 1
+		for( int i = 0; i < n; i++ )
+		{
+			double sum = 0.0;
+			for( int j = 0; j < i; j++ )
+				sum += solutions[j][1] * L.elements[i][j];
+			solutions[i][1] = sum;
+		}
+		// nadam se da nisam zamjenio br redaka i stupaca dolje
+		return new Matrix(1, n, solutions);
 	}
 
 }

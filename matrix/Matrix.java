@@ -91,4 +91,16 @@ public class Matrix {
 			this.elements[n][i] += this.elements[m][i] * alpha;
 		}
 	}
+	
+	/**
+	 * method meant to be used for finding inverse and possibly determinant
+	 * multiplies all elements of row m by number alpha
+	 * @param m index of row we wish to scale
+	 * @param alpha number by which we scale that row
+	 * */
+	public void scaleRow( int m, double alpha )
+	{
+		for( int i = 0; i < this.numOfCols; i++ )
+			this.elements[m][i] *= alpha;
+	}
 }
