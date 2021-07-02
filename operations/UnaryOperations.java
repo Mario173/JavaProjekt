@@ -119,7 +119,12 @@ public class UnaryOperations {
 				for( int k = i+1; k < this.matrix.numOfRows; k++)
 					if( this.matrix.elements[k][i] != 0 )
 						{
-							this.matrix.swapRows(i, k);
+							try {
+								this.matrix.swapRows(i, k);
+							} catch (MatrixDimensionException e) {
+								// TODO Auto-generated catch block //dodano
+								e.printStackTrace();
+							}
 							break;
 						}
 				// u stupcu su sve same 0, smanjiti rank za 1 i prijedi na slijedeci redak i+1
@@ -130,7 +135,12 @@ public class UnaryOperations {
 			for( int j = i+1; j < this.matrix.numOfRows; j++ )
 			{
 				double k = this.matrix.elements[j][i] / this.matrix.elements[i][i];
-				this.matrix.addRowToRow(i, j, k, i);
+				try {
+					this.matrix.addRowToRow(i, j, k, i);
+				} catch (MatrixDimensionException e) {
+					// TODO Auto-generated catch block //dodano
+					e.printStackTrace();
+				}
 			}
 		}
 		return rank;
@@ -226,10 +236,11 @@ public class UnaryOperations {
 	/**
 	 * Calculates the inverse of the given matrix
 	 * @return the inverse matrix
+	 * @throws SquareMatrixException //dodano
 	 */
-	public Matrix inverse() {
+	public Matrix inverse() throws SquareMatrixException {
 		// provjeri je li kvadratna, a nakon toga ima li U iz dekomp dijagonalu bez 0
-		if( matrix.numOfCols != matrix.numOfRows );
+		if( matrix.numOfCols != matrix.numOfRows )
 			throw new SquareMatrixException("Nije kvadratna");
 		int n= matrix.numOfCols, i, j, k ;
 		
@@ -242,15 +253,35 @@ public class UnaryOperations {
 			for( j = i+1; j < n; j++)
 			{
 				double c = - matrix.elements[j][i] / matrix.elements[i][i];
-				matrix.addRowToRow(i, j, c, 0);
-				inverseL.addRowToRow(i, j, c, 0);
+				try {
+					matrix.addRowToRow(i, j, c, 0);
+				} catch (MatrixDimensionException e) {
+					// TODO Auto-generated catch block //dodano
+					e.printStackTrace();
+				}
+				try {
+					inverseL.addRowToRow(i, j, c, 0);
+				} catch (MatrixDimensionException e) {
+					// TODO Auto-generated catch block //dodano
+					e.printStackTrace();
+				}
 			}
 		for( i = n-1; i >= 0; i-- )
 			for( j = i-1; j>= 0; j--)
 			{
 				double c = - matrix.elements[j][i] / matrix.elements[i][i];
-				matrix.addRowToRow(i, j, c, 0);
-				inverseL.addRowToRow(i, j, c, 0);
+				try {
+					matrix.addRowToRow(i, j, c, 0);
+				} catch (MatrixDimensionException e) {
+					// TODO Auto-generated catch block //dodano
+					e.printStackTrace();
+				}
+				try {
+					inverseL.addRowToRow(i, j, c, 0);
+				} catch (MatrixDimensionException e) {
+					// TODO Auto-generated catch block //dodano
+					e.printStackTrace();
+				}
 			}
 		for( i = 0; i < n; i++ )
 		{

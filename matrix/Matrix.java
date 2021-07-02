@@ -15,6 +15,12 @@ public class Matrix {
 		// to je samo da zasad ne javlja gresku, nece nan tribat
 	}
 	
+	public Matrix(int col, int row) {
+		this.numOfCols = col;
+		this.numOfRows = row;
+		this.elements = new double[numOfRows][numOfCols];
+	}
+	
 	/**
 	 * Constuctor for matrices used in operations
 	 * @param col representing the number of columns of the matrix
