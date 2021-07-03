@@ -71,7 +71,7 @@ public class OtherOperations {
 			double k = U.elements[i][i], sum = 0.0;
 			for( int j = n-1; j > i; j-- )
 				sum += solutions[j][1]*U.elements[i][j];
-			solutions[i][1] = ((double) this.polynomial[i] - sum)/k;
+			solutions[i][0] = ((double) this.polynomial[i] - sum)/k;
 		}
 		// sad idemo rijesiti L = y. sad je super sto su na dijagonali sve 1
 		for( int i = 0; i < n; i++ )
@@ -79,7 +79,7 @@ public class OtherOperations {
 			double sum = 0.0;
 			for( int j = 0; j < i; j++ )
 				sum += solutions[j][1] * L.elements[i][j];
-			solutions[i][1] = sum;
+			solutions[i][0] = sum;
 		}
 		// nadam se da nisam zamjenio br redaka i stupaca dolje
 		return new Matrix(1, n, solutions);

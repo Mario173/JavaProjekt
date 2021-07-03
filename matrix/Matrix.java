@@ -65,14 +65,14 @@ public class Matrix {
 	 * */
 	public void swapRows( int x, int y ) throws MatrixDimensionException
 	{
-		if( x < 0 || y < 0 || x < this.numOfRows || y < this.numOfRows )
+		if( x < 0 || y < 0 || x >= this.numOfRows || y >= this.numOfRows )
 		{
 			throw new MatrixDimensionException("swapping rows (wrong row index)");
 		}
 		for( int i = 0; i < this.numOfCols; i++ )
 		{
 			double tmp = this.elements[x][i];
-			this.elements[x][i] = this.elements[y][i];
+			this.elements[x][i] = this.elements[y][i]; 
 			this.elements[y][i] = tmp;
 		}
 	}
@@ -88,7 +88,7 @@ public class Matrix {
 	public void addRowToRow( int m, int n, double alpha, int pocetak ) throws MatrixDimensionException
 	{
 		// standardna provjera granica - redovi moraju biti pozitivni i ne smije biti veci od postojeceg br reda
-		if( m < 0 || n < 0 || m < this.numOfRows || n < this.numOfRows )
+		if( m < 0 || n < 0 || m >= this.numOfRows || n >= this.numOfRows )
 		{
 			throw new MatrixDimensionException("adding row to row (wrong row index)");
 		}
@@ -108,5 +108,25 @@ public class Matrix {
 	{
 		for( int i = 0; i < this.numOfCols; i++ )
 			this.elements[m][i] *= alpha;
+	}
+	
+	public String toString()
+	{
+		int n=this.numOfCols, m=this.numOfRows, i,j;
+		String out="Col: "+n+" Row: "+m+"\n";
+		for( i = 0; i < m; i++ )
+		{
+			
+			out += "[ ";
+			for( j = 0; j < n; j++ )
+			{
+				//debugg
+				//System.out.println("(i,j)="+i+", "+j);
+				out += this.elements[j][i]+" ";
+			}
+			out += "]\n";
+		}
+		// System.out.println("kraj ove matrice");
+		return out;
 	}
 }
