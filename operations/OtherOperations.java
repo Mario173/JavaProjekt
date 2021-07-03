@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import matrix.Matrix;
 
+import exceptions.*;
+
 /**
  * Class used for calculating operations with matrices that aren't unary nor binary
  * @author Mario
@@ -12,6 +14,7 @@ import matrix.Matrix;
 public class OtherOperations {
 	protected Matrix matrix;
 	protected double[] polynomial;
+	protected double[] vector;
 	
 	/**
 	 * Constructor for finding value p(A) of polynomial p(x) given a matrix A 
