@@ -5,13 +5,30 @@ import java.util.ArrayList;
 import exceptions.MatrixDimensionException;
 import exceptions.SquareMatrixException;
 import matrix.Matrix;
-import threads.AddRowsToRows;
+import rowmultithread.AddRowsToRows;
 
 /**
  * Class representing operations where the only operand is a matrix
  * @author Mario
  *
  */
+public class UnaryOperations {
+	protected Matrix matrix;
+	
+	/**
+	 * Constructs an object used for calculations
+	 * @param a represents a matrix used in calculations
+	 */
+	public UnaryOperations(Matrix a) {
+		this.matrix = a;
+	}
+	
+	/**
+	 * Calculates the LU Decomposition of the given matrix
+	 * @return matrices L and U forming an LU Decomposition
+	 * @throws MatrixDimensionException
+	 * @throws InterruptedException 
+	 */
 	public ArrayList<Matrix> LUDecomposition() throws MatrixDimensionException, InterruptedException {
 		int m = this.matrix.numOfRows;
 		// debugg
