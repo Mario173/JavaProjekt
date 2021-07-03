@@ -12,7 +12,7 @@ public class Matrix {
 	public double elements[][];
 	
 	public Matrix() {
-		// to je samo da zasad ne javlja gresku, nece nan tribat
+		super();
 	}
 	
 	public Matrix(int col, int row) {

@@ -7,4 +7,8 @@ public class WrongInsertException extends Exception {
 	public WrongInsertException(String mess) {
 		message = "Error while inserting the matrix: " + mess;
 	}
+	
+	public String getMessage() {
+		return this.message;
+	}
 }

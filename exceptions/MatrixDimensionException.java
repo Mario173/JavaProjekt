@@ -12,4 +12,8 @@ public class MatrixDimensionException extends Exception {
 			this.message += "(the matrix dimensions are wrong)!";
 		}
 	}
+	
+	public String getMessage() {
+		return this.message;
+	}
 }

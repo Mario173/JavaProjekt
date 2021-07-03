@@ -8,4 +8,8 @@ public class SquareMatrixException extends Exception {
 		this.message = "Cannot calculate " + mess + " on a matrix that is not square";
 		this.message += "(has equal number of rows and columns)!";
 	}
+	
+	public String getMessage() {
+		return this.message;
+	}
 }

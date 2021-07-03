@@ -20,7 +20,6 @@ import matrix.Matrix;
  *
  */
 public class Insert {
-	// posalje se u spremnik di cemo cuvat matrice
 	Matrix lastInserted;
 	
 	/**
@@ -44,12 +43,13 @@ public class Insert {
 	 * @throws WrongInsertException 
 	 */
 	@SuppressWarnings("unused")
-	protected void handleCharacters(Reader reader) throws IOException, WrongInsertException {
+	protected void handleCharacters(Reader reader) throws IOException, WrongInsertException, NullPointerException, NumberFormatException {
         int r;
-        int read = 0, i = 0, j = 0;
+        int read = 0, i = 0, j = 0, sign = 1;
         int numOfRows = 0, numOfCols = 0;
         ArrayList<ArrayList<Double>> values = new ArrayList<>();
         String s = new String();
+        char prev = ' ';
         
         while ((r = reader.read()) != -1) {
         	char curr = (char)r;
@@ -57,39 +57,40 @@ public class Insert {
         	if(read == 0 && curr != ' ') {
         		numOfRows = r;
         		read++;
+        		prev = curr;
+        		continue;
         	}
         	if(read == 1 && curr != ' ') {
         		numOfCols = r;
         		read++;
+        		prev = curr;
+        		continue;
         	}
         	
-        	if(curr == ' ') {
-        		try {
-        			values.get(i).add(Double.parseDouble(s));
-        			s = "";
-        			j++;
-        			if(j == numOfCols) {
-        				j = 0;
-        				i++;
-        			}
-    				if(i >= numOfRows && j > 0) {
-    					throw new WrongInsertException("Too many symbols! Expected: " + (numOfRows * numOfCols));
-    				}
-        		} catch(NullPointerException e) {
-        			e.printStackTrace();
-        			return;
-        		} catch(NumberFormatException f) {
-        			f.printStackTrace();
-        			return;
-        		}
+        	if(curr == ' ' && prev != ' ') {
+        		values.get(i).add(sign * Double.parseDouble(s));
+        		sign = 1;
+    			s = "";
+    			j++;
+    			if(j == numOfCols) {
+    				j = 0;
+    				i++;
+    			}
+				if(i >= numOfRows && j > 0) {
+					throw new WrongInsertException("Too many symbols! Expected: " + (numOfRows * numOfCols));
+				}
+        		prev = curr;
         		continue;
         	} else if(curr == '.' || Character.isDigit(curr)) {
         		s += curr;
+        		prev = curr;
+        	} else if(curr == '-' && (prev == ' ' || prev == ',')) {
+        		sign = -1;
         	} else {
         		// a symbol that is not a number, '.' or ' '
 				throw new WrongInsertException("Invalid symbol!");
         	}
-            System.out.println("Do something with " + r);
+            // System.out.println("Do something with " + r);
         }
         if(j != 0 || i != numOfRows) {
 			throw new WrongInsertException("Not enough symbols! Expected: " + (numOfRows * numOfCols));
@@ -110,24 +111,13 @@ public class Insert {
 	 * Method used for inserting matrices from files
 	 * @param filePath string representing path to the file
 	 */
-	public void insertFromFile(String filePath) {
-		try {
-			File myFile = new File(filePath);
-			InputStream in = new FileInputStream(myFile);
-            Reader reader = new InputStreamReader(in, Charset.defaultCharset());
-            // buffer for efficiency
-            Reader buffer = new BufferedReader(reader);
-            handleCharacters(buffer);
-		} catch(FileNotFoundException e) {
-			e.printStackTrace();
-			return;
-		} catch(IOException f) {
-			f.printStackTrace();
-			return;
-		} catch(WrongInsertException w) {
-			System.out.println(w.message);
-			return;
-		}
+	public void insertFromFile(String filePath) throws FileNotFoundException, IOException, WrongInsertException {
+		File myFile = new File(filePath);
+		InputStream in = new FileInputStream(myFile);
+        Reader reader = new InputStreamReader(in, Charset.defaultCharset());
+        // buffer for efficiency
+        Reader buffer = new BufferedReader(reader);
+        handleCharacters(buffer);
 	}
 	
 	/**
@@ -135,7 +125,7 @@ public class Insert {
 	 * @param matrix string representation of a matrix
 	 * @throws WrongInsertException if there's an error during the insert
 	 */
-	public void insertFromTextBox(String matrix) throws WrongInsertException {
+	public void insertFromTextBox(String matrix) throws WrongInsertException, NullPointerException, NumberFormatException {
 		@SuppressWarnings("unused")
 		int i = 0, numOfRows = 0, numOfCols = 0, countElements = 0, countParentheses = 0;
 		ArrayList<ArrayList<Double>> values = new ArrayList<>();
@@ -160,6 +150,10 @@ public class Insert {
 				i++;
 				continue;
 			} else if(Character.isDigit(curr)) {
+				int sign = 1;
+				if(matrix.charAt(i - 1) == '-') {
+					sign = -1;
+				}
 				String s = curr.toString();
 				i++;
 				while(i != matrix.length() && matrix.charAt(i) != ',' && matrix.charAt(i) != '}') {
@@ -167,16 +161,11 @@ public class Insert {
 					i++;
 				}
 				i--;
-				try {
-					values.get(numOfRows).add(Double.parseDouble(s));
-					countElements++;
-				} catch(NullPointerException e) {
-					e.printStackTrace();
-					return;
-				} catch(NumberFormatException f) {
-					f.printStackTrace();
-					return;
-				}
+				values.get(numOfRows).add(sign * Double.parseDouble(s));
+				countElements++;
+			} else if(curr =='-' || curr == '+') {
+				i++;
+				continue;
 			} else {
 				// a symbol that is not a number, ',', '.', '{' or '}'
 				throw new WrongInsertException("Invalid symbol!");
@@ -191,6 +180,12 @@ public class Insert {
 			// wrong number of parentheses
 			throw new WrongInsertException("Too many } parentheses!");
 		}
+		
+		if(numOfRows == 0) {
+			this.lastInserted = new Matrix();
+			return;
+		}
+		
 		if(numOfRows != 1) {
 			numOfRows--;
 		}
