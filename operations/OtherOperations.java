@@ -49,30 +49,60 @@ public class OtherOperations {
 	 * Method used for solving linear system of equations
 	 * @return the matrix containing the solution
 	 */
-	public Matrix solveLinearSystem() {
+	public double[] solveLinearSystem() {
 		int n = matrix.numOfRows;
-		double[][] solutions = new double[n][1];
+		//double[][] solutions = new double[n][1];
 		UnaryOperations Unar = new UnaryOperations(matrix);
-		ArrayList<Matrix> LU = Unar.LUDecomposition();
-		Matrix L = LU.get(1), U = LU.get(2);
-		// rjesavamo U = b
-		for( int i = n-1; i >=0; i--)
-		{
-			double k = U.elements[i][i], sum = 0.0;
-			for( int j = n-1; j > i; j-- )
-				sum += solutions[j][1]*U.elements[i][j];
-			solutions[i][0] = ((double) this.polynomial[i] - sum)/k;
+		ArrayList<Matrix> LU;
+		double [] Usolution = new double[n];
+		double [] Lsolution = new double[n];
+		double k, sum;
+		double[] perm_vector = new double[n];
+		try { 
+				//dodano
+			LU = Unar.LUDecomposition();
+			Matrix pivot = LU.get(0);
+			Matrix L = LU.get(1), U = LU.get(2);
+			// rjesavamo U = b
+			
+			for(int i = 0; i < n; i++) {
+				perm_vector[i] = vector[(int) pivot.elements[i][0]];
+			}
+			
+			
+			
+			for( int i = 0; i < n; i++ )
+			{
+				k = L.elements[i][i];
+				sum = 0.0;
+				for( int j = 0; j < i; j++ ) {
+					sum += Lsolution[j] * L.elements[i][j];
+				}
+				Lsolution[i] = (perm_vector[i] - sum) / k;
+			}
+			
+			for( int i = n-1; i >=0; i--)
+			{
+				k = U.elements[i][i]; 
+				sum = 0.0;
+				for( int j = n-1; j > i; j-- )
+					sum += Usolution[j] * U.elements[i][j];
+				Usolution[i] = (Lsolution[i] - sum)/k;
+			}
+			// sad idemo rijesiti L = y. sad je super sto su na dijagonali sve 1
+			
+			return Usolution;
+			// nadam se da nisam zamjenio br redaka i stupaca dolje
+		} catch (MatrixDimensionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		// sad idemo rijesiti L = y. sad je super sto su na dijagonali sve 1
-		for( int i = 0; i < n; i++ )
-		{
-			double sum = 0.0;
-			for( int j = 0; j < i; j++ )
-				sum += solutions[j][1] * L.elements[i][j];
-			solutions[i][0] = sum;
-		}
-		// nadam se da nisam zamjenio br redaka i stupaca dolje
-		return new Matrix(1, n, solutions);
+		return new double[n];
+		
+		
 	}
 
 }

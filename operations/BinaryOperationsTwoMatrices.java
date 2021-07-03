@@ -84,7 +84,7 @@ public class BinaryOperationsTwoMatrices {
 		{
 			//izbaci neki exception jer nisu amtrice ulancane
 		}
-		Matrix result = new  Matrix(this.first.numOfRows, this.second.numOfCols, new double[this.first.numOfRows][this.second.numOfCols]);
+		/*Matrix result = new  Matrix(this.first.numOfCols, this.second.numOfRows, new double[this.first.numOfRows][this.second.numOfCols]);
 		for( int i = 0; i < result.numOfRows; i++ )
 		{
 			for( int j = 0; j < result.numOfCols; j++ )
@@ -97,6 +97,13 @@ public class BinaryOperationsTwoMatrices {
 				result.elements[i][j] = sum;
 			}
 		}
-		return result;
+		*/
+		try {
+			return MultiThreadMatrixProduct.Multiply(first,second);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block //dodano
+			e.printStackTrace();
+			return new Matrix(); //dodano
+		}
 	}
 }

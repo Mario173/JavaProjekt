@@ -12,23 +12,6 @@ import threads.AddRowsToRows;
  * @author Mario
  *
  */
-public class UnaryOperations {
-	protected Matrix matrix;
-	
-	/**
-	 * Constructs an object used for calculations
-	 * @param a represents a matrix used in calculations
-	 */
-	public UnaryOperations(Matrix a) {
-		this.matrix = a;
-	}
-	
-	/**
-	 * Calculates the LU Decomposition of the given matrix
-	 * @return matrices L and U forming an LU Decomposition
-	 * @throws MatrixDimensionException
-	 * @throws InterruptedException 
-	 */
 	public ArrayList<Matrix> LUDecomposition() throws MatrixDimensionException, InterruptedException {
 		int m = this.matrix.numOfRows;
 		// debugg
@@ -71,7 +54,7 @@ public class UnaryOperations {
 				// trebamo pivotirati retke piv i i
 				this.matrix.swapRows(i, piv);
 				int tmp = (int) pivot.elements[i][0];
-				pivot.elements[i][0] = piv;
+				pivot.elements[i][0] = pivot.elements[piv][0];
 				pivot.elements[piv][0] = tmp;
 				piv_sign = -piv_sign;
 			}
@@ -103,6 +86,7 @@ public class UnaryOperations {
 		
 		ArrayList<Matrix> result = new ArrayList<Matrix>();
 		// vracamo P * L * matrix
+		//System.out.println("pivot je "+pivot);
 		result.add(pivot);  result.add(L); result.add(matrix);
 		// debugg
 		//System.out.println("A = P*LU");

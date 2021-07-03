@@ -5,7 +5,7 @@ import operations.BinaryOperationsTwoMatrices;
 import operations.MatrixAndScalarOperations;
 import operations.OtherOperations;
 import operations.UnaryOperations;
-import threads.AddRowsToRows;
+import rowmultithread.AddRowsToRows;
 import exceptions.SquareMatrixException;
 import exceptions.MatrixDimensionException;
 import exceptions.WrongInsertException;
@@ -49,7 +49,7 @@ public class TestMain {
 		Matrix J2,J3,J4, A,B,C,D, R;
 		J2 = new Matrix(2,2,I2); J3 = new Matrix(3,3,I3); J4 = new Matrix(4,4,I4);
 		A = new Matrix(2,2,elem22); B = new Matrix(3,3,elem33); C = new Matrix(4,4,elem44);
-		D = new Matrix(2,3,elem23);
+		D = new Matrix(3,2,elem23);
 		BinaryOperationsTwoMatrices Bin;
 		MatrixAndScalarOperations MS;
 		// OtherOperations Oo = new OtherOperations(A,pol);
@@ -66,11 +66,18 @@ public class TestMain {
 		int r = Uo.rank(); System.out.println("Rank od B = "+r+"\n");
 		
 		// idemo napraviti za rj lin sistema 
-		double[][] lin = new double[2][1];
-		lin[0][0] = 1; lin[1][0] = 2;
-		Matrix linear = new Matrix(2,1,lin);
-		OtherOperations Oo = new OtherOperations(A,linear);
-		System.out.println("Rjesenje linearne jedn Ax=(1,2) je: "+Oo.solveLinearSystem());
+		double[][] mat = {{0.0, 1.0, 0.0, 0.0},
+				{0.0, 0.0, 1.0,0.0},
+				{0.0,0.0,0.0,1.0},
+				{1.0,0.0,0.0,0.0}};
+		Matrix linsys = new Matrix(4,4,mat);
+		double[] vektor = {10.0 ,13.0, 14.0,20.0};
+		OtherOperations Oo = new OtherOperations(linsys, vektor);
+		double[] rjesenje = Oo.solveLinearSystem();
+		for( double el : rjesenje) {
+			System.out.println(el);
+		}
+		//System.out.println("Rjesenje linearne jedn Ax=(1,2) je: "+rjesenje.toString());
 		
  	}
 
