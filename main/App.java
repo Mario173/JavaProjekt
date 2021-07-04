@@ -19,6 +19,7 @@ import exceptions.MatrixDimensionException;
 import exceptions.SquareMatrixException;
 import exceptions.WrongInsertException;
 import exceptions.ImpermissibleExponentException;
+import exceptions.MatrixIsSingularException;
 import matrix.Matrix;
 import operations.BinaryOperationsTwoMatrices;
 import operations.MatrixAndScalarOperations;
@@ -341,7 +342,7 @@ public class App {
 						lblText.setBounds(300, 70, 300, 150);
 						String s = "The determinant of the matrix is: ";
 						lblText.setText(s + Double.toString(u.determinant()));
-					} catch (SquareMatrixException e1) {
+					} catch (MatrixDimensionException | InterruptedException | SquareMatrixException e1) {
 						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
 					}
 					first = new Matrix(0,0);
@@ -381,7 +382,7 @@ public class App {
 						temp += Arrays.toString(vect);
 						
 						lblText.setText(temp);
-					} catch (SquareMatrixException | MatrixDimensionException | InterruptedException e1) {
+					} catch (SquareMatrixException | MatrixDimensionException | InterruptedException | MatrixIsSingularException e1) {
 						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
 					}
 					first = new Matrix(0,0);
@@ -423,7 +424,7 @@ public class App {
 					try {
 						res = u.inverse();
 						makeLabel("The inverse of the given matrix is:\n", 1);
-					} catch (SquareMatrixException | MatrixDimensionException | InterruptedException e1) {
+					} catch (SquareMatrixException | MatrixDimensionException | InterruptedException | MatrixIsSingularException e1) {
 						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
 					}
 					first = new Matrix(0,0);

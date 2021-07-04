@@ -3,6 +3,7 @@ package operations;
 import java.util.ArrayList;
 
 import exceptions.MatrixDimensionException;
+import exceptions.MatrixIsSingularException;
 import exceptions.SquareMatrixException;
 import matrix.Matrix;
 import rowmultithread.AddRowsToRows;
@@ -303,7 +304,7 @@ public class UnaryOperations {
 	 * @throws MatrixDimensionException 
 	 * @throws InterruptedException 
 	 */
-	public Matrix inverse() throws SquareMatrixException, MatrixDimensionException, InterruptedException 
+	public Matrix inverse() throws SquareMatrixException, MatrixDimensionException, InterruptedException , MatrixIsSingularException
 	{
 		// provjeri je li kvadratna, a nakon toga ima li U iz dekomp dijagonalu bez 0
 		if( matrix.numOfCols != matrix.numOfRows )
@@ -311,6 +312,12 @@ public class UnaryOperations {
 			throw new SquareMatrixException("Nije kvadratna");
 		}
 		int n= matrix.numOfCols, i, j;		
+		
+		double determinant = new UnaryOperations(this.matrix).determinant();
+		
+		if( determinant >= -0.001 && determinant < 0.001) {
+			throw new MatrixIsSingularException("inverse");
+		}
 		
 		// ajmo probat naivni gaussov nacin - u biti on se cini dosta zgodan za visedretvenost?
 		double[][] elem_inv = new double[n][n];

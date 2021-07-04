@@ -7,6 +7,9 @@ import operations.OtherOperations;
 import operations.UnaryOperations;
 import rowmultithread.AddRowsToRows;
 import exceptions.SquareMatrixException;
+
+import java.util.ArrayList;
+
 import exceptions.MatrixDimensionException;
 import exceptions.WrongInsertException;
 
@@ -77,7 +80,15 @@ public class TestMain {
 		for( double el : rjesenje) {
 			System.out.println(el);
 		}
-		System.out.println("determinanta je "+ (new UnaryOperations(linsys)).determinant2() );
+		
+		double[][] test_array = {{1,2,3},{2,4,6},{3,6,9}};
+		Matrix test = new Matrix(3,3,test_array ); 
+		ArrayList<Matrix> LU = new UnaryOperations(test).LUDecomposition();
+		Matrix L = new Matrix(LU.get(1));
+		Matrix U = new Matrix(LU.get(2));
+		System.out.println("L i U" +L +""+U);
+		
+		System.out.println("determinanta je "+ (new UnaryOperations(test)).determinant2() );
 		//System.out.println("Rjesenje linearne jedn Ax=(1,2) je: "+rjesenje.toString());
 		
 		

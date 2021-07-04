@@ -65,8 +65,9 @@ public class OtherOperations {
 	 * @throws MatrixDimensionException 
 	 * @throws InterruptedException 
 	 * @throws SquareMatrixException 
+	 * @throws MatrixIsSingularException 
 	 */
-	public double[] solveLinearSystem() throws MatrixDimensionException, InterruptedException, SquareMatrixException {
+	public double[] solveLinearSystem() throws MatrixDimensionException, InterruptedException, SquareMatrixException, MatrixIsSingularException {
 		int n = matrix.numOfRows;
 		//double[][] solutions = new double[n][1];
 		UnaryOperations Unar = new UnaryOperations(matrix);
@@ -75,12 +76,25 @@ public class OtherOperations {
 		double [] Lsolution = new double[n];
 		double k, sum;
 		double[] perm_vector = new double[n];
+		
+		double determinant = new UnaryOperations(this.matrix).determinant2();
+		
+		if( determinant >= -0.001 && determinant < 0.001) {
+			throw new MatrixIsSingularException("linear system");
+		}
+		
 		try { 
 				//dodano
 			LU = Unar.LUDecomposition();
 			Matrix pivot = LU.get(0);
 			Matrix L = LU.get(1), U = LU.get(2);
 			// rjesavamo U = b
+			
+			determinant = new UnaryOperations(U).determinant2();
+			
+			if( determinant >= -0.001 && determinant < 0.001) {
+				throw new MatrixIsSingularException("linear system");
+			}
 			
 			for(int i = 0; i < n; i++) {
 				perm_vector[i] = vector[(int) pivot.elements[i][0]];
@@ -110,12 +124,10 @@ public class OtherOperations {
 			
 			return Usolution;
 			// nadam se da nisam zamjenio br redaka i stupaca dolje
-		} catch (MatrixDimensionException e) {
+		} catch (MatrixDimensionException | InterruptedException | MatrixIsSingularException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			
 		}
 		return new double[n];
 		
