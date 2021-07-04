@@ -4,6 +4,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class App {
 	double scalar;
 	int exponent;
 	double[] polynomialOrLinSysb;
+	ArrayList<Matrix> LU;
 	
 	// for the result
 	Label lblText;
@@ -57,6 +59,7 @@ public class App {
 		this.polynomialOrLinSysb = new double[15];
 		this.res = new Matrix(0,0);
 		this.db = new Sqlitedatabase();
+		this.LU = new ArrayList<>();
 	}
 
 	/**
@@ -268,8 +271,8 @@ public class App {
 				} else {
 					UnaryOperations u = new UnaryOperations(first);
 					try {
-						res = u.LUDecomposition().get(0);
-						makeLabel("The LU decomposition is:\n", 1);
+						LU = u.LUDecomposition();
+						makeLabelLU("The matrix used for calculations is:\n");
 					} catch (MatrixDimensionException | InterruptedException e1) {
 						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
 					}
@@ -514,7 +517,39 @@ public class App {
 	}
 	
 	/**
+	 * Make the label for the LU decomposition
+	 * @param start text to start the label
+	 */
+	public void makeLabelLU(String start) {
+		lblText.setBounds(300, 70, 400, 300);
+		for(int i = 0; i < this.first.numOfRows; i++) {
+			for(int j = 0; j < this.first.numOfCols; j++) {
+				start += (String.format("%.2f", first.elements[i][j]) + " ");
+			}
+			start += "\n";
+		}
+		start += "The resulting matrices (pivot, L and U) are:\n";
+		for(int i = 0; i < LU.get(0).numOfRows; i++) {
+			for(int j = 0; j < LU.get(0).numOfCols; j++) {
+				start += (String.format("%.2f", LU.get(0).elements[i][j]) + " ");
+			}
+			start += " | ";
+			for(int j = 0; j < LU.get(1).numOfCols; j++) {
+				start += (String.format("%.2f", LU.get(1).elements[i][j]) + " ");
+			}
+			start += " | ";
+			for(int j = 0; j < LU.get(2).numOfCols; j++) {
+				start += (String.format("%.2f", LU.get(2).elements[i][j]) + " ");
+			}
+			start += "\n";
+		}
+		this.lblText.setText(start);
+	}
+	
+	/**
 	 * Make the label for the result
+	 * @param temp text to start the label
+	 * @param whichOperation integer representing a group of the operations
 	 */
 	public void makeLabel(String temp, int whichOperation) {
 		lblText.setBounds(300, 70, Math.max(400, 30 * res.numOfCols), Math.max(200, 30 * (res.numOfRows + 1)));
