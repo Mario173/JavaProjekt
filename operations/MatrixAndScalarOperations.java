@@ -2,6 +2,7 @@ package operations;
 
 import java.util.ArrayList;
 
+import exceptions.MatrixDimensionException;
 import exceptions.SquareMatrixException;
 import matrix.Matrix;
 
@@ -29,43 +30,60 @@ public class MatrixAndScalarOperations {
 	 * @return the resulting matrix
 	 */
 	public Matrix scalar() {
+		Matrix res = new Matrix(this.matrix.numOfRows, this.matrix.numOfCols);
 		for(int i = 0; i < this.matrix.numOfRows; i++) {
 			for(int j = 0; j < this.matrix.numOfCols; j++) {
-				this.matrix.elements[i][j] *= this.scalar;
+				res.elements[i][j] = this.matrix.elements[i][j] * this.scalar;
 			}
 		}
-		return this.matrix;
+		return res;
 	}
 	
 	/**
 	 * Potentiates the matrix to a given potention (integer between 1 and 15)
 	 * @return the resulting matrix
 	 * @throws SquareMatrixException if the given matrix is not square
+	 * @throws MatrixDimensionException 
 	 */
-	public Matrix potentiate() throws SquareMatrixException {
+	public Matrix potentiate() throws SquareMatrixException, MatrixDimensionException {
 		// potentiate the matrix on the given potention
 		if(this.matrix.numOfCols != this.matrix.numOfRows) {
 			throw new SquareMatrixException("the power of the matrix");
 		}
 		ArrayList<Integer> howToExp = new ArrayList<>();
 		int exp = (int) this.scalar;
+		
+		if(exp == 0) {
+			double[][] temp = new double[this.matrix.numOfRows][this.matrix.numOfCols];
+			for(int i = 0; i < this.matrix.numOfRows; i++) {
+				for(int j = 0; j < this.matrix.numOfCols; j++) {
+					if(i == j) {
+						temp[i][j] = 1;
+					} else {
+						temp[i][j] = 0;
+					}
+				}
+			}
+			return new Matrix(this.matrix.numOfRows, this.matrix.numOfCols, temp);
+		}
+		
 		while(exp != 0) {
 			howToExp.add(exp % 2);
 			exp /= 2;
 		}
-		Matrix helper = this.matrix;
-		BinaryOperationsTwoMatrices multiply = new BinaryOperationsTwoMatrices(this.matrix, this.matrix);
-		for(int i = 0; i < howToExp.size(); i++) {
-			this.matrix = multiply.multiply();
-			multiply.first = this.matrix;
+		Matrix helper = new Matrix(this.matrix.numOfRows, this.matrix.numOfCols, this.matrix.elements);
+		BinaryOperationsTwoMatrices multiply = new BinaryOperationsTwoMatrices(helper, helper);
+		for(int i = howToExp.size() -  2; i >= 0; i--) {
+			helper = multiply.multiply();
+			multiply.first = helper;
 			if(howToExp.get(i) == 1) {
-				multiply.second = helper;
-				this.matrix = multiply.multiply();
-				multiply.first = this.matrix;
+				multiply.second = this.matrix;
+				helper = multiply.multiply();
+				multiply.first = helper;
 			}
-			multiply.second = this.matrix;
+			multiply.second = helper;
 		}
-		return this.matrix;
+		return helper;
 	}
 
 }

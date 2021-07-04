@@ -4,6 +4,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -24,10 +25,6 @@ import operations.UnaryOperations;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.events.SelectionAdapter;
 
-//import javax.swing.*; 
-//import java.awt.*;
-//import java.awt.event.*;
-
 public class App {
 
 	protected Shell shlMatrixCalculator;
@@ -47,11 +44,12 @@ public class App {
 	 * Default constructor
 	 */
 	public App() {
-		this.first = new Matrix();
-		this.second = new Matrix();
+		this.first = new Matrix(0,0);
+		this.second = new Matrix(0,0);
 		this.scalar = 0;
 		this.exponent = 0;
 		this.polynomialOrLinSysb = new double[15];
+		this.res = new Matrix(0,0);
 	}
 
 	/**
@@ -98,11 +96,11 @@ public class App {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openNewWindow(2, "Are matrices Equal");
-				if(first == null || second == null) {
-					res = null;
+				if(first.numOfRows == 0 || second.numOfRows == 0) {
+					res = new Matrix(0,0);
 				} else {
 					BinaryOperationsTwoMatrices b = new BinaryOperationsTwoMatrices(first, second);
-					first = second = res = null;
+					first = second = res = new Matrix(0,0);
 					lblText.setBounds(300, 70, 200, 150);
 					if(b.isEqual()) {
 						lblText.setText("Given matrices are equal");
@@ -122,13 +120,13 @@ public class App {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openNewWindow(2, "Add matrices");
-				if(first == null || second == null) {
-					res = null;
+				if(first.numOfRows == 0 || second.numOfRows == 0) {
+					res = new Matrix(0,0);
 				} else {
 					BinaryOperationsTwoMatrices b = new BinaryOperationsTwoMatrices(first, second);
-					first = second = null;
 					res = b.add();
-					makeLabel("You added two matrices:\n");
+					makeLabel("You added two matrices:\n", 2);
+					first = second = new Matrix(0,0);
 				}
 			}
 		});
@@ -141,13 +139,13 @@ public class App {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openNewWindow(2, "Subtract matrices");
-				if(first == null || second == null) {
-					res = null;
+				if(first.numOfRows == 0 || second.numOfRows == 0) {
+					res = new Matrix(0,0);
 				} else {
 					BinaryOperationsTwoMatrices b = new BinaryOperationsTwoMatrices(first, second);
-					first = second = null;
 					res = b.subtract();
-					makeLabel("You subtracted two matrices:\n");
+					makeLabel("You subtracted two matrices:\n", 2);
+					first = second = new Matrix(0,0);
 				}
 			}
 		});
@@ -160,13 +158,13 @@ public class App {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openNewWindow(4, "Multiply matrix with a scalar");
-				if(first == null) {
-					res = null;
+				if(first.numOfRows == 0) {
+					res = new Matrix(0,0);
 				} else {
 					MatrixAndScalarOperations s = new MatrixAndScalarOperations(first, scalar);
-					first = null;
 					res = s.scalar();
-					makeLabel("You multiplied a matrix with a scalar:\n");
+					makeLabel("You multiplied a matrix with a scalar:\n", 4);
+					first = new Matrix(0,0);
 				}
 			}
 		});
@@ -179,13 +177,17 @@ public class App {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openNewWindow(2, "Multiply matrices");
-				if(first == null || second == null) {
-					res = null;
+				if(first.numOfRows == 0 || second.numOfRows == 0) {
+					res = new Matrix(0,0);
 				} else {
 					BinaryOperationsTwoMatrices b = new BinaryOperationsTwoMatrices(first, second);
-					first = second = null;
-					res = b.multiply();
-					makeLabel("You multiplied two matrices:\n");
+					try {
+						res = b.multiply();
+						makeLabel("You multiplied two matrices:\n", 2);
+					} catch (MatrixDimensionException e1) {
+						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
+					}
+					first = second = new Matrix(0,0);
 				}
 			}
 		});
@@ -198,13 +200,17 @@ public class App {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openNewWindow(4, "Potentiate matrix");
-				if(first == null || second == null) {
-					res = null;
+				if(first.numOfRows == 0) {
+					res = new Matrix(0,0);
 				} else {
 					MatrixAndScalarOperations s = new MatrixAndScalarOperations(first, exponent);
-					first = null;
-					res = s.scalar();
-					makeLabel("You multiplied a matrix n times:\n");
+					try {
+						res = s.potentiate();
+						makeLabel("You multiplied a matrix n times:\n", 4);
+					} catch (SquareMatrixException | MatrixDimensionException e1) {
+						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
+					}
+					first = new Matrix(0,0);
 				}
 			}
 		});
@@ -217,17 +223,17 @@ public class App {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openNewWindow(3, "Polynomial");
-				if(first == null || second == null) {
-					res = null;
+				if(first.numOfRows == 0) {
+					res =  new Matrix(0,0);
 				} else {
 					OtherOperations o = new OtherOperations(first, polynomialOrLinSysb);
-					first = null;
 					try {
 						res = o.calculatePolynomialValue();
-						makeLabel("The resulting value is:\n");
-					} catch (SquareMatrixException e1) {
+						makeLabel("The resulting value is:\n", 3);
+					} catch (SquareMatrixException | MatrixDimensionException e1) {
 						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
 					}
+					first = new Matrix(0,0);
 				}
 			}
 		});
@@ -240,17 +246,17 @@ public class App {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openNewWindow(1, "Find the LU decomposition of the matrix");
-				if(first == null) {
-					res = null;
+				if(first.numOfRows == 0) {
+					res = new Matrix(0,0);
 				} else {
 					UnaryOperations u = new UnaryOperations(first);
-					first = null;
 					try {
 						res = u.LUDecomposition().get(0);
-						makeLabel("The LU decomposition is:\n");
-					} catch (MatrixDimensionException e1) {
+						makeLabel("The LU decomposition is:\n", 1);
+					} catch (MatrixDimensionException | InterruptedException e1) {
 						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
 					}
+					first = new Matrix(0,0);
 				}
 			}
 		});
@@ -263,11 +269,10 @@ public class App {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openNewWindow(1, "Find the trace of the matrix");
-				if(first == null) {
-					res = null;
+				if(first.numOfRows == 0) {
+					res = new Matrix(0,0);
 				} else {
 					UnaryOperations u = new UnaryOperations(first);
-					first = null;
 					try {
 						lblText.setBounds(300, 70, 200, 150);
 						String s = "The trace of the matrix is: ";
@@ -275,6 +280,7 @@ public class App {
 					} catch (SquareMatrixException e1) {
 						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
 					}
+					first = new Matrix(0,0);
 				}
 			}
 		});
@@ -287,14 +293,18 @@ public class App {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openNewWindow(1, "Find the rank of the matrix");
-				if(first == null) {
-					res = null;
+				if(first.numOfRows == 0) {
+					res = new Matrix(0,0);
 				} else {
 					UnaryOperations u = new UnaryOperations(first);
-					first = null;
 					lblText.setBounds(300, 70, 200, 150);
 					String s = "The rank of the matrix is: ";
-					lblText.setText(s + u.rank());
+					try {
+						lblText.setText(s + u.rank());
+					} catch (MatrixDimensionException | InterruptedException e1) {
+						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
+					}
+					first = new Matrix(0,0);
 				}
 			}
 		});
@@ -307,11 +317,10 @@ public class App {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openNewWindow(1, "Find the determinant of the matrix");
-				if(first == null) {
-					res = null;
+				if(first.numOfRows == 0) {
+					res = new Matrix(0,0);
 				} else {
 					UnaryOperations u = new UnaryOperations(first);
-					first = null;
 					try {
 						lblText.setBounds(300, 70, 300, 150);
 						String s = "The determinant of the matrix is: ";
@@ -319,6 +328,7 @@ public class App {
 					} catch (SquareMatrixException e1) {
 						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
 					}
+					first = new Matrix(0,0);
 				}
 			}
 		});
@@ -331,30 +341,40 @@ public class App {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openNewWindow(3, "Solve linear system");
-				if(first == null) {
-					res = null;
+				if(first.numOfRows == 0) {
+					res = new Matrix(0,0);
 				} else {
 					OtherOperations o = new OtherOperations(first, polynomialOrLinSysb);
-					makeLabel("The resulting vector is: ");
+					try {
+						double[] vect = o.solveLinearSystem();
+						String s = "Solve linear system:\n";
+						s += "The resulting vector is:\n";
+						s += Arrays.toString(vect);
+						
+						lblText.setText(s);
+					} catch (MatrixDimensionException | InterruptedException e1) {
+						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
+					}
+					first = new Matrix(0,0);
 				}
 			}
 		});
 		btnLinearSystems.setBounds(4 * (shlMatrixCalculator.getSize().x - 20) / 7, 30, (shlMatrixCalculator.getSize().x - 20) / 7, 30);
 		btnLinearSystems.setText("Lin Sys");
-		btnLinearSystems.setToolTipText("For Ax=b, where A is a m�n matrix and b is m�1 matrix, calculate x");
+		btnLinearSystems.setToolTipText("For Ax=b, where A is a m×n matrix and b is m×1 matrix, calculate x");
 		
 		Button btnTranspose = new Button(shlMatrixCalculator, SWT.NONE);
 		btnTranspose.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				openNewWindow(3, "Find transposed matrix");
-				if(first == null) {
-					res = null;
+				openNewWindow(1, "Find transposed matrix");
+				if(first.numOfRows == 0) {
+					res = new Matrix(0,0);
 				} else {
 					UnaryOperations u = new UnaryOperations(first);
-					first = null;
 					res = u.transpose();
-					makeLabel("The transposed matrix is:\n");
+					makeLabel("The transposed matrix is:\n", 1);
+					first = new Matrix(0,0);
 				}
 			}
 		});
@@ -367,13 +387,17 @@ public class App {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				openNewWindow(1, "Find matrix inverse");
-				if(first == null) {
-					res = null;
+				if(first.numOfRows == 0) {
+					res = new Matrix(0,0);
 				} else {
 					UnaryOperations u = new UnaryOperations(first);
-					first = null;
-					res = u.inverse();
-					makeLabel("The inverse of the given matrix is:\n");
+					try {
+						res = u.inverse();
+						makeLabel("The inverse of the given matrix is:\n", 1);
+					} catch (SquareMatrixException | MatrixDimensionException | InterruptedException e1) {
+						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
+					}
+					first = new Matrix(0,0);
 				}
 			}
 		});
@@ -408,8 +432,9 @@ public class App {
 					}
 					System.out.print("]");
 				} catch (NullPointerException | NumberFormatException | WrongInsertException e1) {
-					// TODO Auto-generated catch block
 					MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
+				} catch(StringIndexOutOfBoundsException e2) {
+					MessageDialog.openError(shlMatrixCalculator, "Error", "Please write your matrix into the textbox");
 				}
 			}
 		});
@@ -447,8 +472,82 @@ public class App {
 	/**
 	 * Make the label for the result
 	 */
-	public void makeLabel(String temp) {
-		lblText.setBounds(300, 70, Math.max(200, 30 * res.numOfCols), Math.max(150, 30 * (res.numOfRows + 1)));
+	public void makeLabel(String temp, int whichOperation) {
+		lblText.setBounds(300, 70, Math.max(400, 30 * res.numOfCols), 2 * Math.max(200, 30 * (res.numOfRows + 1)));
+		
+		switch(whichOperation) {
+			case 1:
+				temp += "The matrix used in this operation is:\n";
+				for(int i = 0; i < first.numOfRows; i++) {
+					for(int j = 0; j < first.numOfCols; j++) {
+						temp += String.format("%.2f", first.elements[i][j]);
+						temp += " ";
+					}
+					temp += "\n";
+				}
+				break;
+			case 2:
+				temp += "The matrices used in this operation are:\n";
+				int len = 0;
+				for(int i = 0; i < Math.max(first.numOfRows, first.numOfCols); i++) {
+					for(int j = 0; j < first.numOfCols; j++) {
+						if(i >= first.numOfRows) {
+							for(int k = 0; k < len; k++) {
+								temp += " ";
+							}
+							break;
+						} else {
+							len += (String.format("%.2f", first.elements[i][j]).length() + 1);
+							temp += String.format("%.2f", first.elements[i][j]);
+							temp += " ";
+						}
+					}
+					temp += "\t | ";
+					for(int j = 0; j < second.numOfCols; j++) {
+						if(i >= second.numOfRows) {
+							break;
+						} else {
+							temp += String.format("%.2f", second.elements[i][j]);
+							temp += " ";
+						}
+					}
+					temp += "\n";
+				}
+				break;
+			case 3:
+				temp += "The matrix used in this operation is:\n";
+				for(int i = 0; i < first.numOfRows; i++) {
+					for(int j = 0; j < first.numOfCols; j++) {
+						temp += String.format("%.2f", first.elements[i][j]);
+						temp += " ";
+					}
+					temp += "\n";
+				}
+				temp += "The vector used is:\n";
+				for(int i = 0; i < this.polynomialOrLinSysb.length; i++) {
+					temp += (String.format("%.2f", this.polynomialOrLinSysb[i]) + " ");
+				}
+				break;
+			case 4:
+				temp += "The matrix used in this operation is:\n";
+				for(int i = 0; i < first.numOfRows; i++) {
+					for(int j = 0; j < first.numOfCols; j++) {
+						temp += String.format("%.2f", first.elements[i][j]);
+						temp += " ";
+					}
+					temp += "\n";
+				}
+				temp += "The scalar used in this operation is: ";
+				if(this.scalar != 0) {
+					temp += (String.format("%.2f", this.scalar) + "\n");
+					this.scalar = 0;
+				} else {
+					temp += (this.exponent + "\n");
+				}
+				break;
+			default:
+				break;
+		}
 		
 		temp += "The result is:\n";
 		for(int i = 0; i < res.numOfRows; i++) {
@@ -524,7 +623,7 @@ public class App {
 	 * @return true if creation succeeded, false otherwise
 	 */
 	public void customizeOperations(Shell newWindow, int howMany, String whichOne) {
-		newWindow.setBounds(200, 200, howMany * 350, 400);
+		newWindow.setBounds(200, 200, howMany * 350, 450);
 		newWindow.setText(whichOne);
 		Text textboxes[] = new Text[howMany * 2];
 		Button buttons[] = new Button[howMany * 3];
@@ -552,6 +651,16 @@ public class App {
 			buttons[curr2 + 2].setBounds(100 + i * 350, 290, 130, 30);
 		}
 		
+		Button calc = new Button(newWindow, SWT.NONE);
+		calc.setText("Calculate");
+		calc.setBounds(newWindow.getBounds().width / 2 - 65, 330, 130, 30);
+		calc.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent evt) {
+				newWindow.close();
+			}
+		});
+		
 		for(int i = 0; i < howMany; i++) {
 			int curr = 2 * i, curr2 = 3 * i;
 
@@ -560,9 +669,10 @@ public class App {
 				public void widgetSelected(SelectionEvent e) {
 					try {
 						insert.insertFromTextBox(textboxes[curr].getText());
-						for(int j = 0; j < 3; j++) {
-							buttons[curr2 + j].setEnabled(false);
-						}
+						Label tick = new Label(newWindow, SWT.NONE);
+						Rectangle rect = buttons[curr2].getBounds();
+						tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
+						tick.setText("✓");
 						if(curr2 == 0) {
 							first = insert.lastInserted;
 						} else {
@@ -570,6 +680,8 @@ public class App {
 						}
 					} catch (NullPointerException | NumberFormatException | WrongInsertException e1) {
 						MessageDialog.openError(newWindow, "Warning", e1.getMessage());
+					} catch(StringIndexOutOfBoundsException e2) {
+						MessageDialog.openError(shlMatrixCalculator, "Error", "Please write your matrix into the textbox");
 					}
 				}
 			});
@@ -579,9 +691,10 @@ public class App {
 				public void widgetSelected(SelectionEvent e) {
 					try {
 						insert.insertFromFile(textboxes[curr + 1].getText());
-						for(int j = 0; j < 3; j++) {
-							buttons[curr2 + j].setEnabled(false);
-						}
+						Label tick = new Label(newWindow, SWT.NONE);
+						Rectangle rect = buttons[curr2 + 1].getBounds();
+						tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
+						tick.setText("✓");
 						if(curr2 == 0) {
 							first = insert.lastInserted;
 						} else {
@@ -599,9 +712,10 @@ public class App {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					insert.insertFromDatabase();
-					for(int j = 0; j < 3; j++) {
-						buttons[curr2 + j].setEnabled(false);
-					}
+					Label tick = new Label(newWindow, SWT.NONE);
+					Rectangle rect = buttons[curr2 + 2].getBounds();
+					tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
+					tick.setText("✓");
 				}
 			});
 		}
@@ -611,10 +725,10 @@ public class App {
 	 * Method for customizing new window for other operations
 	 * @param newWindow shell representing a new window
 	 * @param whichOne string representing an operation
-	 * @return true if creation succeded, false otherwise
+	 * @return true if creation succeeded, false otherwise
 	 */
 	public void customizeOtherOperations(Shell newWindow, String whichOne) {
-		newWindow.setBounds(200, 200, 300, 550);
+		newWindow.setBounds(200, 200, 300, 600);
 		newWindow.setText(whichOne);
 		
 		Insert insert = new Insert();
@@ -652,19 +766,31 @@ public class App {
 		btn4.setText("Insert poly/column");
 		btn4.setBounds(100, 450, 130, 30);
 		
+		Button calc = new Button(newWindow, SWT.NONE);
+		calc.setText("Calculate");
+		calc.setBounds(newWindow.getBounds().width / 2 - 65, 490, 130, 30);
+		calc.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent evt) {
+				newWindow.close();
+			}
+		});
+		
 		// actions on click
 		btn4.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				btn4.setEnabled(false);
 				String nums[] = textbox3.getText().split(" ");
 				polynomialOrLinSysb = new double[nums.length];
 				for(int i = 0; i < nums.length; i++) {
 					try {
 						polynomialOrLinSysb[i] = Double.parseDouble(nums[i]);
+						Label tick = new Label(newWindow, SWT.NONE);
+						Rectangle rect = btn4.getBounds();
+						tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
+						tick.setText("✓");
 					} catch(NullPointerException | NumberFormatException e1) {
-						MessageDialog.openError(newWindow, "Warning", e1.getMessage());
-						btn4.setEnabled(true);
+						MessageDialog.openError(newWindow, "Error", e1.getMessage());
 					}
 				}
 			}
@@ -674,9 +800,10 @@ public class App {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				insert.insertFromDatabase();
-				btn1.setEnabled(false);
-				btn2.setEnabled(false);
-				btn3.setEnabled(false);
+				Label tick = new Label(newWindow, SWT.NONE);
+				Rectangle rect = btn3.getBounds();
+				tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
+				tick.setText("✓");
 			}
 		});
 
@@ -685,13 +812,14 @@ public class App {
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					insert.insertFromFile(textbox2.getText());
-					btn1.setEnabled(false);
-					btn2.setEnabled(false);
-					btn3.setEnabled(false);
+					first = insert.lastInserted;
+					Label tick = new Label(newWindow, SWT.NONE);
+					Rectangle rect = btn2.getBounds();
+					tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
+					tick.setText("✓");
 				} catch (IOException | WrongInsertException e1) {
 					MessageDialog.openError(newWindow, "Warning", e1.getMessage());
 				}
-				first = insert.lastInserted;
 			}
 		});
 
@@ -700,12 +828,15 @@ public class App {
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					insert.insertFromTextBox(textbox1.getText());
-					btn1.setEnabled(false);
-					btn2.setEnabled(false);
-					btn3.setEnabled(false);
+					Label tick = new Label(newWindow, SWT.NONE);
+					Rectangle rect = btn1.getBounds();
+					tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
+					tick.setText("✓");
 					first = insert.lastInserted;
 				} catch (NullPointerException | NumberFormatException | WrongInsertException e1) {
 					MessageDialog.openError(newWindow, "Warning", e1.getMessage());
+				} catch(StringIndexOutOfBoundsException e2) {
+					MessageDialog.openError(shlMatrixCalculator, "Error", "Please write your matrix into the textbox");
 				}
 			}
 		});
@@ -713,7 +844,7 @@ public class App {
 	
 	
 	public void customizeScalarOperations(Shell newWindow, String whichOne) {
-		newWindow.setBounds(200, 200, 300, 550);
+		newWindow.setBounds(200, 200, 300, 600);
 		newWindow.setText(whichOne);
 		
 		Insert insert = new Insert();
@@ -751,20 +882,32 @@ public class App {
 		btn4.setText("Insert scalar");
 		btn4.setBounds(100, 450, 130, 30);
 		
+		Button calc = new Button(newWindow, SWT.NONE);
+		calc.setText("Calculate");
+		calc.setBounds(newWindow.getBounds().width / 2 - 65, 500, 130, 30);
+		calc.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent evt) {
+				newWindow.close();
+			}
+		});
+		
 		// actions on click
 		btn4.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					btn4.setEnabled(false);
 					if(whichOne.equalsIgnoreCase("Multiply matrix with a scalar")) {
 						scalar = Double.parseDouble(textbox3.getText());
 					} else {
 						exponent = Integer.parseInt(textbox3.getText());
 					}
+					Label tick = new Label(newWindow, SWT.NONE);
+					Rectangle rect = btn4.getBounds();
+					tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
+					tick.setText("✓");
 				} catch(NullPointerException | NumberFormatException e1) {
 					MessageDialog.openError(newWindow, "Warning", e1.getMessage());
-					btn4.setEnabled(true);
 				}
 			}
 		});
@@ -773,9 +916,10 @@ public class App {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				insert.insertFromDatabase(); // povuci iz baze, vjer drugacije
-				btn1.setEnabled(false);
-				btn2.setEnabled(false);
-				btn3.setEnabled(false);
+				Label tick = new Label(newWindow, SWT.NONE);
+				Rectangle rect = btn3.getBounds();
+				tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
+				tick.setText("✓");
 			}
 		});
 
@@ -784,9 +928,10 @@ public class App {
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					insert.insertFromFile(textbox2.getText());
-					btn1.setEnabled(false);
-					btn2.setEnabled(false);
-					btn3.setEnabled(false);
+					Label tick = new Label(newWindow, SWT.NONE);
+					Rectangle rect = btn2.getBounds();
+					tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
+					tick.setText("✓");
 					first = insert.lastInserted;
 				} catch (IOException | WrongInsertException e1) {
 					MessageDialog.openError(newWindow, "Warning", e1.getMessage());
@@ -799,12 +944,15 @@ public class App {
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					insert.insertFromTextBox(textbox1.getText());
-					btn1.setEnabled(false);
-					btn2.setEnabled(false);
-					btn3.setEnabled(false);
+					Label tick = new Label(newWindow, SWT.NONE);
+					Rectangle rect = btn1.getBounds();
+					tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
+					tick.setText("✓");
 					first = insert.lastInserted;
 				} catch (NullPointerException | NumberFormatException | WrongInsertException e1) {
 					MessageDialog.openError(newWindow, "Warning", e1.getMessage());
+				} catch(StringIndexOutOfBoundsException e2) {
+					MessageDialog.openError(shlMatrixCalculator, "Error", "Please write your matrix into the textbox");
 				}
 			}
 		});
