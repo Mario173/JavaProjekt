@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import exceptions.MatrixDimensionException;
 import exceptions.SquareMatrixException;
+import exceptions.MatrixIsSingularException;
 import matrix.Matrix;
 import operations.MatrixAndScalarOperations;
 import operations.UnaryOperations;
@@ -111,7 +112,7 @@ public class UnaryOperationsTest {
 		try {
 			System.out.println("det=" + result.determinant() );
 			Assert.isTrue( ( expResult == result.determinant() ) );
-		} catch (SquareMatrixException e) {
+		} catch (MatrixDimensionException | InterruptedException | SquareMatrixException  e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -153,7 +154,7 @@ public class UnaryOperationsTest {
 					Assert.isTrue( expResult.elements[i][j] == r.elements[i][j] );
 				}
 			}			
-		} catch (SquareMatrixException | MatrixDimensionException | InterruptedException e) {
+		} catch (SquareMatrixException | MatrixDimensionException | InterruptedException | MatrixIsSingularException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -12,6 +12,7 @@ import org.junit.Test;
 import exceptions.ImpermissibleExponentException;
 import exceptions.MatrixDimensionException;
 import exceptions.SquareMatrixException;
+import exceptions.MatrixIsSingularException;
 import matrix.Matrix;
 import operations.MatrixAndScalarOperations;
 import operations.OtherOperations;
@@ -59,7 +60,7 @@ public class OtherOperationsTest {
 	}
 
 	@Test
-	public void testSolveLinearSystem() throws MatrixDimensionException, InterruptedException, SquareMatrixException {
+	public void testSolveLinearSystem() throws MatrixDimensionException, InterruptedException, SquareMatrixException, MatrixIsSingularException {
 		System.out.println("Provjera unarne operacije rjesavanja lin sustava");
 		double[][] elem1 = {{1,2},{0,4}}; Matrix A = new Matrix(2,2,elem1);
 		double[] polinom = {1,8};

@@ -7,6 +7,7 @@ import operations.OtherOperations;
 import operations.UnaryOperations;
 import rowmultithread.AddRowsToRows;
 import exceptions.SquareMatrixException;
+import exceptions.MatrixIsSingularException;
 
 import java.util.ArrayList;
 
@@ -15,7 +16,7 @@ import exceptions.WrongInsertException;
 
 public class TestMain {
 
-	public static void main(String[] args) throws SquareMatrixException, MatrixDimensionException, InterruptedException {
+	public static void main(String[] args) throws SquareMatrixException, MatrixDimensionException, InterruptedException, MatrixIsSingularException {
 		// TODO Auto-generated method stub
 		int i=0, j=0;
 		double[][] elem22 = new double[2][2];
