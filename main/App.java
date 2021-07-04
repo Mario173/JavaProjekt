@@ -394,7 +394,7 @@ public class App {
 		});
 		btnLinearSystems.setBounds(4 * (shlMatrixCalculator.getSize().x - 20) / 7, 30, (shlMatrixCalculator.getSize().x - 20) / 7, 30);
 		btnLinearSystems.setText("Lin Sys");
-		btnLinearSystems.setToolTipText("For Ax=b, where A is a m×n matrix and b is m×1 matrix, calculate x");
+		btnLinearSystems.setToolTipText("For Ax=b, where A is a mĂ—n matrix and b is mĂ—1 matrix, calculate x");
 		
 		Button btnTranspose = new Button(shlMatrixCalculator, SWT.NONE);
 		btnTranspose.addSelectionListener(new SelectionAdapter() {
@@ -452,18 +452,11 @@ public class App {
 				Insert i = new Insert();
 				try {
 					i.insertFromTextBox(textInsert.getText());
-					// umisto ovoga ispod (samo provjera radi li dobro) triba bit ubacivanje u bazu
-					System.out.println("Cols: " + i.lastInserted.numOfCols);
-					System.out.println("Rows: " + i.lastInserted.numOfRows);
-					System.out.print("Elements: [");
-					for(int j = 0; j < i.lastInserted.numOfRows; j++) {
-						System.out.print("[");
-						for(int k = 0; k < i.lastInserted.numOfCols; k++) {
-							System.out.print(i.lastInserted.elements[j][k] + " ");
-						}
-						System.out.print("],");
-					}
-					System.out.print("]");
+					Label tick = new Label(shlMatrixCalculator, SWT.NONE);
+					Rectangle rect = btnInsert.getBounds();
+					tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
+					tick.setText("✓");
+					db.insert_matrix(i.lastInserted);
 				} catch (NullPointerException | NumberFormatException | WrongInsertException e1) {
 					MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
 				} catch(StringIndexOutOfBoundsException e2) {
@@ -499,6 +492,22 @@ public class App {
 		btnInsertFileName.setBounds(139, 317, 90, 30);
 		btnInsertFileName.setText("Insert Name");
 		btnInsertFileName.setToolTipText("Insert matrix from a .txt file");
+		btnInsertFileName.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Insert insert = new Insert();
+				try {
+					insert.insertFromFile(textBoxForFileNames.getText());
+					Label tick = new Label(shlMatrixCalculator, SWT.NONE);
+					Rectangle rect = btnInsertFileName.getBounds();
+					tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
+					tick.setText("✓");
+					db.insert_matrix(insert.lastInserted);
+				} catch (IOException | WrongInsertException e1) {
+					MessageDialog.openError(shlMatrixCalculator, "Warning", e1.getMessage());
+				}
+			}
+		});
 		
 		Label insertIntoDb = new Label(shlMatrixCalculator, SWT.NONE);
 		insertIntoDb.setBounds(shlMatrixCalculator.getBounds().width - 350, 163 * shlMatrixCalculator.getSize().y / 192 + 5, 200, 30);
@@ -687,12 +696,45 @@ public class App {
 	 * @param newWindow shell representing a new window
 	 */
 	public void customizeHelp(Shell newWindow) {
-		newWindow.setBounds(new Rectangle(200, 200, 500, 350));
+		newWindow.setBounds(new Rectangle(100, 100, 700, 855));
         newWindow.setText("Help");
         
         Label test = new Label(newWindow, SWT.NONE);
-        test.setText("Just a test! Here goes the text for help.\nHey");
-        test.setBounds(50, 50, 250, 250);
+        test.setBounds(5, 5, 690, 845);
+        
+        String temp = "How to use Matrix Calculator app?\n";
+        temp += "Our app is fairly intuitive and easy to use!\n";
+        temp += "On the top of the window you can see 2 rows of buttons. Each button represents an operation\n with matrices.";
+        temp += "There are 4 kind of operations, binary operations with 2 matrices, \nbinary operations with a matrix and a scalar,"
+        		+ " unary operations using a single matrix and \noperations that use a matrix and a vector.";
+        temp += "You can just hover over the buttons for more information \nabout the operations.";
+        temp += "Once you choose the operation and click the button, a new window will open.\n";
+        temp += "The new window will look different depending on the nature of the operation.\n";
+        temp += "If you chose to do an operation with two matrices, \na window will have 2 identical columns with 2 textboxes and 3 buttons.\n";
+        temp += "The first column is for the first matrix, and the second is for the second matrix.\n";
+        temp += "In each column, the first textbox (the larger one) is for directly typing in the matrix.\n";
+        temp += "The matrix must be typed surrounded by brackets, with each row also surrounded by brackets, e.g.\n";
+        temp += "{{1,2,3},{4,5,6}} represents a matrix with 2 rows and 3 columns.\n";
+        temp += "The smaller textbox is used for inserting from .txt files, e.g.\n";
+        temp += "C://Users/Mario/Desktop/matrix.txt will find that text file and read the matrix from it.\n";
+        temp += "CAUTION: The first 2 numbers in the .txt file must be \nnumber of rows and number of columns of the matrix!\n";
+        temp += "The button below the each of those textboxes is used to \ntemporarily save the inserted matrix and exactly one of them needs to be clicked.\n.";
+        temp += "If you chose an unary operation, the window will \nhave 1 instead of two columns which behave in the same way.\n";
+        temp += "If you chose an operation with a scalar or other operation, \nthe window will have 1 column with an additional \ntextbox and a button near the bottom of the screen.";
+        temp += "They are used for inserting the scalar or a vector, depending on the operation.\n";
+        temp += "CAUTION: The vector is inserted so that a space divides each number, e.g.\n";
+        temp += "-1 2.3 9 -0.7 represents a vector [-1, 2.3, 9, -0.7].\n";
+        temp += "IMPORTANT: At the bottom of each of that window there is a button \"Calculate\"\n which needs to be clicked after you insert all the needed data!\n";
+        temp += "All the new windows have buttons for inserting the matrices from the database.\n";
+        temp += "Once you click that button, a new window will open with <=10 radio buttons.\n";
+        temp += "Just hover with your mouse over each to see which matrix they hold, \nbut be careful, once you leave that window, there will always be one chosen matrix.\n";
+        temp += "But don't worry! You can just type in a new matrix or a path to a file in a textbox or choose another \nmatrix from database before clicking \"Calculate\"";
+        temp += "Except the 14 buttons, on the main screen \nthere is a column with 2 textboxes and 2 buttons and a button in the lower right corner.\n";
+        temp += "They are all used for inserting your matrices in a database and saving them for later.\n";
+        temp += "The column behaves exactly as the ones in the new window.\n";
+        temp += "The button in the lower right corner is used for saving the resulting matrices. \nClick it if you want to save the result for later.";
+        
+        test.setText(temp);
 	}
 	
 	/**

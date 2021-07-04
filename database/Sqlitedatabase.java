@@ -71,7 +71,7 @@ public class Sqlitedatabase {
 		}
 		
 		String sql2 = "DELETE FROM matrices WHERE id NOT IN (SELECT id FROM matrices ORDER BY id DESC LIMIT 10);";
-		System.out.println("vamo si");
+		//System.out.println("vamo si");
 		
 		try {
 			Statement stmt = this.conn.createStatement();

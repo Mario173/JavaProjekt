@@ -30,13 +30,6 @@ public class Insert {
 	}
 	
 	/**
-	 * Method used for inserting matrices from database
-	 */
-	public void insertFromDatabase() {
-		
-	}
-	
-	/**
 	 * For reading characters from a file char by char
 	 * @param reader
 	 * @throws IOException
