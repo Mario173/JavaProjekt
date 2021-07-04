@@ -30,9 +30,13 @@ public class Sqlitedatabase {
 		try {
 			this.conn = DriverManager.getConnection(url);
 			Statement stmt = this.conn.createStatement();
-			if ( this.conn != null) { stmt.execute(sql);}
-			} catch (SQLException e) {
-				System.out.println(e.getMessage()); }
+			if ( this.conn != null) {
+				stmt.execute(sql);
+			}
+		} 
+		catch (SQLException e) {
+				System.out.println(e.getMessage());
+		}
 	}
 	
 	public void insert_matrix(Matrix m) {
@@ -65,6 +69,20 @@ public class Sqlitedatabase {
 		catch(SQLException e){
 		
 		}
+		
+		String sql2 = "DELETE FROM matrices WHERE id NOT IN (SELECT id FROM matrices ORDER BY id DESC LIMIT 10);";
+		System.out.println("vamo si");
+		
+		try {
+			Statement stmt = this.conn.createStatement();
+			if ( this.conn != null) {
+				stmt.execute(sql2);
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public List<Matrix> selectAll() {
