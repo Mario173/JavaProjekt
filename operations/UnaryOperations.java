@@ -287,14 +287,13 @@ public class UnaryOperations {
 	 * @return the transposed matrix
 	 */
 	public Matrix transpose() {
+		Matrix temp = new Matrix(this.matrix.numOfCols,this.matrix.numOfRows);
 		for(int i = 0; i < this.matrix.numOfRows; i++) {
 			for(int j = 0; j < this.matrix.numOfCols; j++) {
-				double temp = this.matrix.elements[i][j];
-				this.matrix.elements[i][j] = this.matrix.elements[j][i];
-				this.matrix.elements[j][i] = temp;
+				temp.elements[j][i] = this.matrix.elements[i][j];
 			}
 		}
-		return this.matrix;
+		return temp;
 	}
 	
 	/**
