@@ -190,7 +190,7 @@ public class UnaryOperations {
 	 * @throws InterruptedException 
 	 * @throws SquareMatrixException 
 	 */
-	public double determinant2() throws MatrixDimensionException, InterruptedException, SquareMatrixException {
+	public double determinant() throws MatrixDimensionException, InterruptedException, SquareMatrixException {
 		this.matrix = new Matrix(this.unchanged);
 		if(this.matrix.numOfCols != this.matrix.numOfRows) {
 			throw new SquareMatrixException("determinant");
@@ -213,7 +213,7 @@ public class UnaryOperations {
 	 * @return the determinant of the given matrix
 	 * @throws SquareMatrixException 
 	 */
-	public double determinant() throws SquareMatrixException {
+	public double determinant2() throws SquareMatrixException {
 		this.matrix = new Matrix(this.unchanged);
 		if(this.matrix.numOfCols != this.matrix.numOfRows) {
 			throw new SquareMatrixException("determinant");
