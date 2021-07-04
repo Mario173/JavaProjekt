@@ -475,11 +475,11 @@ public class App {
 		btnInsertFileName.setToolTipText("Insert matrix from a .txt file");
 		
 		Label insertIntoDb = new Label(shlMatrixCalculator, SWT.NONE);
-		insertIntoDb.setBounds(shlMatrixCalculator.getBounds().width - 330, 163 * shlMatrixCalculator.getSize().y / 192, 180, 30);
+		insertIntoDb.setBounds(shlMatrixCalculator.getBounds().width - 350, 163 * shlMatrixCalculator.getSize().y / 192 + 5, 200, 30);
 		insertIntoDb.setText("Insert last result into database: ");
 		
 		Button btnDB = new Button(shlMatrixCalculator, SWT.NONE);
-		btnDB.setBounds(shlMatrixCalculator.getBounds().width - 130, 163 * shlMatrixCalculator.getSize().y / 192, 120, 30);
+		btnDB.setBounds(shlMatrixCalculator.getBounds().width - 140, 163 * shlMatrixCalculator.getSize().y / 192, 120, 30);
 		btnDB.setText("Insert into DB");
 		btnDB.setToolTipText("Insert into your database (last 10 matrices inserted are kept)");
 		btnDB.addSelectionListener(new SelectionAdapter() {
