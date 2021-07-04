@@ -49,25 +49,28 @@ public class Insert {
         int numOfRows = 0, numOfCols = 0;
         ArrayList<ArrayList<Double>> values = new ArrayList<>();
         String s = new String();
-        char prev = ' ';
+        char prev = ' ', curr;
         
         while ((r = reader.read()) != -1) {
-        	char curr = (char)r;
+        	curr = (char)r;
         	
         	if(read == 0 && curr != ' ') {
-        		numOfRows = r;
+        		numOfRows = Character.getNumericValue(curr);
         		read++;
         		prev = curr;
         		continue;
         	}
         	if(read == 1 && curr != ' ') {
-        		numOfCols = r;
+        		numOfCols = Character.getNumericValue(curr);
         		read++;
         		prev = curr;
         		continue;
         	}
         	
-        	if(curr == ' ' && prev != ' ') {
+        	if((curr == ' ' || curr == '\n' || curr == '\t' || r == 13) && Character.isDigit(prev) && read > 2) {
+        		if(j % numOfCols == 0) {
+        			values.add(new ArrayList<>());
+        		}
         		values.get(i).add(sign * Double.parseDouble(s));
         		sign = 1;
     			s = "";
@@ -82,22 +85,28 @@ public class Insert {
         		prev = curr;
         		continue;
         	} else if(curr == '.' || Character.isDigit(curr)) {
+        		read++;
         		s += curr;
         		prev = curr;
         	} else if(curr == '-' && (prev == ' ' || prev == ',')) {
         		sign = -1;
+        	} else if(curr == ' ' || curr == '\n' || curr == '\t' || r == 13) { 
+        		prev = ' ';
+        		continue;
         	} else {
         		// a symbol that is not a number, '.' or ' '
 				throw new WrongInsertException("Invalid symbol!");
         	}
             // System.out.println("Do something with " + r);
         }
-        if(j != 0 || i != numOfRows) {
+        if(j != (numOfCols - 1) || i != (numOfRows - 1)) {
 			throw new WrongInsertException("Not enough symbols! Expected: " + (numOfRows * numOfCols));
         }
+        // for the last value
+        values.get(i).add(sign * Double.parseDouble(s));
         
-        this.lastInserted.numOfRows = numOfRows;
-        this.lastInserted.numOfCols = numOfCols;
+        this.lastInserted = new Matrix(numOfRows, numOfCols);
+        System.out.println(numOfRows + " " + numOfCols);
         double[][] arr = new double[numOfRows][numOfCols];
 		for(j = 0; j < numOfRows; j++) {
 			for(int k = 0; k < numOfCols; k++) {
@@ -195,6 +204,6 @@ public class Insert {
 				arr[j][k] = values.get(j).get(k);
 			}
 		}
-		this.lastInserted = new Matrix(numOfCols, numOfRows, arr);
+		this.lastInserted = new Matrix(numOfRows, numOfCols, arr);
 	}
 }

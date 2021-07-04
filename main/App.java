@@ -13,6 +13,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Text;
 
+import database.Sqlitedatabase;
 import exceptions.MatrixDimensionException;
 import exceptions.SquareMatrixException;
 import exceptions.WrongInsertException;
@@ -41,6 +42,8 @@ public class App {
 	// for the result
 	Label lblText;
 	
+	Sqlitedatabase db;
+	
 	/**
 	 * Default constructor
 	 */
@@ -51,6 +54,7 @@ public class App {
 		this.exponent = 0;
 		this.polynomialOrLinSysb = new double[15];
 		this.res = new Matrix(0,0);
+		this.db = new Sqlitedatabase();
 	}
 
 	/**
@@ -181,6 +185,8 @@ public class App {
 				if(first.numOfRows == 0 || second.numOfRows == 0) {
 					res = new Matrix(0,0);
 				} else {
+					System.out.println("Here2: " + first.numOfRows + " " + first.numOfCols);
+					System.out.println("Here3: " + second.numOfRows + " " + second.numOfCols);
 					BinaryOperationsTwoMatrices b = new BinaryOperationsTwoMatrices(first, second);
 					try {
 						res = b.multiply();
@@ -467,7 +473,21 @@ public class App {
 		btnInsertFileName.setBounds(139, 317, 90, 30);
 		btnInsertFileName.setText("Insert Name");
 		btnInsertFileName.setToolTipText("Insert matrix from a .txt file");
-
+		
+		Label insertIntoDb = new Label(shlMatrixCalculator, SWT.NONE);
+		insertIntoDb.setBounds(shlMatrixCalculator.getBounds().width - 330, 163 * shlMatrixCalculator.getSize().y / 192, 180, 30);
+		insertIntoDb.setText("Insert last result into database: ");
+		
+		Button btnDB = new Button(shlMatrixCalculator, SWT.NONE);
+		btnDB.setBounds(shlMatrixCalculator.getBounds().width - 130, 163 * shlMatrixCalculator.getSize().y / 192, 120, 30);
+		btnDB.setText("Insert into DB");
+		btnDB.setToolTipText("Insert into your database (last 10 matrices inserted are kept)");
+		btnDB.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				db.insert_matrix(res);
+			}
+		});
 	}
 	
 	/**
@@ -700,8 +720,6 @@ public class App {
 							first = insert.lastInserted;
 						} else {
 							second = insert.lastInserted;
-							newWindow.close();
-							return;
 						}
 					} catch (NullPointerException | NumberFormatException | IOException | WrongInsertException e1) {
 						MessageDialog.openWarning(newWindow, "Warning", e1.getMessage());
