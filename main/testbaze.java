@@ -1,8 +1,12 @@
 package main;
 
 import matrix.Matrix;
-import operations.MultiThreadMatrixProduct;
+
+import java.util.List;
+
+//import operations.MultiThreadMatrixProduct;
 import database.Sqlitedatabase;
+import operations.MultiThreadMatrixAddition;
 
 public class testbaze {
 
@@ -12,14 +16,14 @@ public class testbaze {
         					{2.0, 3.0, 5.0},
         					{1.0, 1.0, 1.0}
         					});
-		Matrix n = new Matrix(4,3,new double[][]{ {1.0 ,-4.0, 2.0, 5.0},
-			{2.0, 3.0, 5.0, 3.0},
-			{1.0, 1.0, 1.0, -7.0}
+		Matrix n = new Matrix(3,3,new double[][]{ {1.0 ,-4.0, 2.0},
+			{2.0, 3.0, 5.0},
+			{1.0, 1.0, 1.0}
 			});
-		q.insert_matrix(m);
+		//q.insert_matrix(m);
 		Matrix c = new Matrix();
 		try {
-			c = MultiThreadMatrixProduct.Multiply(m,n);
+			c = MultiThreadMatrixAddition.Add(m,n);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -29,6 +33,11 @@ public class testbaze {
 				System.out.print(c.elements[i][j]+" ");
 			}
 			System.out.println();
+		}
+		List<Matrix> matrice = q.selectAll();
+		
+		for( Matrix mat : matrice) {
+			System.out.println(mat);
 		}
 		
 		

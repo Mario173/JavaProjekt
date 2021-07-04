@@ -38,19 +38,19 @@ public class OtherOperations {
 		double[][] zero = new double[this.matrix.numOfRows][this.matrix.numOfCols];
 		Matrix result = new Matrix(this.matrix.numOfRows, this.matrix.numOfCols, zero);
 		
-		for(int j = 0; j < this.polynomial.length; j++) {
-			System.out.println(this.polynomial[j]);
+		for(int j = 0; j < this.vector.length; j++) {
+			//System.out.println(this.vector[j]);
 		}
 		
 		for(int i = this.vector.length - 1; i >= 0; i--) {
-			if(polynomial[i] == 0) {
+			if(vector[i] == 0) {
 				continue;
 			}
-			Matrix help = new Matrix(this.matrix.numOfRows, this.matrix.numOfCols, this.matrix.elements);
+			Matrix help = new Matrix(this.matrix);
 			MatrixAndScalarOperations pot = new MatrixAndScalarOperations(help, i);
 			pot.matrix = pot.potentiate();
 			pot.scalar = this.vector[i];
-			System.out.println(result.numOfRows + " " + pot.scalar().numOfRows);
+			//System.out.println(result.numOfRows + " " + pot.scalar().numOfRows);
 			BinaryOperationsTwoMatrices add = new BinaryOperationsTwoMatrices(result, pot.scalar());
 			result = add.add();
 		}

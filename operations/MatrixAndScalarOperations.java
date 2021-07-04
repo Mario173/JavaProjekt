@@ -76,7 +76,7 @@ public class MatrixAndScalarOperations {
 			howToExp.add(exp % 2);
 			exp /= 2;
 		}
-		Matrix helper = new Matrix(this.matrix.numOfRows, this.matrix.numOfCols, this.matrix.elements);
+		Matrix helper = new Matrix(this.matrix);
 		BinaryOperationsTwoMatrices multiply = new BinaryOperationsTwoMatrices(helper, helper);
 		for(int i = howToExp.size() -  2; i >= 0; i--) {
 			helper = multiply.multiply();

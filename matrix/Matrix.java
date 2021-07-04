@@ -15,7 +15,7 @@ public class Matrix {
 		super();
 	}
 	
-	public Matrix(int col, int row) {
+	public Matrix(int row, int col) {
 		this.numOfCols = col;
 		this.numOfRows = row;
 		this.elements = new double[numOfRows][numOfCols];
@@ -27,10 +27,15 @@ public class Matrix {
 	 * @param row rperesenting the number of rows of the matrix
 	 * @param elem represents the elements of the matrix
 	 */
-	public Matrix(int col, int row, double[][] elem) {
+	public Matrix(int row, int col, double[][] elem) {
 		this.numOfCols = col;
 		this.numOfRows = row;
-		this.elements = elem;
+		this.elements = new double[row][col];
+		for(int i = 0; i < row; i++) {
+			for(int j = 0; j < col; j++) {
+				this.elements[i][j] = elem[i][j];
+			}
+		}
 	}
 	
 	/**
@@ -39,22 +44,38 @@ public class Matrix {
 	 * @param row number of rows
 	 * @param elem string containing all elements
 	 */
-	public Matrix(int col, int row, String elem) {
+	public Matrix(int row, int col, String elem) {
 		//potrebno je implementirat
 		this.numOfCols = col;
 		this.numOfRows = row;
-		double[][] elements = new double[row][col];
+		this.elements = new double[row][col];
 		String[] elems = elem.split(";");
 		for(int i = 0; i < row; i++) {
 			for(int j = 0; j < col; j++) {
 				try {
-					elements[i][j] = Double.parseDouble(elems[i * col + j]);
+					this.elements[i][j] = Double.parseDouble(elems[i * col + j]);
 				} catch(IndexOutOfBoundsException e) {
 					e.printStackTrace();
 					return; // mozda jos nesto jer je greska
 				}
 			}
 		}
+	}
+	
+	public Matrix(Matrix mat) {
+		this.numOfCols = mat.numOfCols;
+		this.numOfRows = mat.numOfRows;
+		this.elements = new double[numOfRows][numOfCols];
+		for(int i = 0; i < this.numOfRows; i++) {
+			for(int j = 0; j < this.numOfCols; j++) {
+				try {
+					this.elements[i][j] = mat.elements[i][j];
+				} catch(IndexOutOfBoundsException e) {
+					e.printStackTrace();
+					return; // mozda jos nesto jer je greska
+				}
+			}
+		}		
 	}
 	
 	/**
@@ -122,7 +143,7 @@ public class Matrix {
 			{
 				//debugg
 				//System.out.println("(i,j)="+i+", "+j);
-				out += this.elements[j][i]+" ";
+				out += this.elements[i][j]+" ";
 			}
 			out += "]\n";
 		}

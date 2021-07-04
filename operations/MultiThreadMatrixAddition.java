@@ -21,7 +21,7 @@ public class MultiThreadMatrixAddition implements Runnable {
 	public static Matrix Add(Matrix A, Matrix B) throws InterruptedException {
 		int newRow = A.numOfRows;
 		int newCol = A.numOfCols;
-		Matrix C = new Matrix(newCol, newRow);
+		Matrix C = new Matrix(newRow, newCol);
 		
 		Thread[][] threads = new Thread[newRow][newCol];
 		

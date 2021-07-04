@@ -26,7 +26,7 @@ public class MultiThreadMatrixProduct implements Runnable {
 	public static Matrix Multiply(Matrix A, Matrix B) throws InterruptedException {
 		int newRow = A.numOfRows;
 		int newCol = B.numOfCols;
-		Matrix C = new Matrix(newCol, newRow);
+		Matrix C = new Matrix(newRow, newCol);
 		
 		Thread[][] threads = new Thread[newRow][newCol];
 		

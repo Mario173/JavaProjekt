@@ -16,8 +16,8 @@ public class BinaryOperationsTwoMatrices {
 	 * @param b represents the second matrix in the operation
 	 */
 	public BinaryOperationsTwoMatrices(Matrix a, Matrix b) {
-		this.first = a;
-		this.second = b;
+		this.first = new Matrix(a);
+		this.second = new Matrix(b);
 	}
 	
 	/**
@@ -46,7 +46,7 @@ public class BinaryOperationsTwoMatrices {
 		if(this.first.numOfRows != this.second.numOfRows || this.first.numOfCols != this.second.numOfCols) {
 			// baci neki exception -> poslije
 		}
-		Matrix result = new Matrix(this.first.numOfCols, this.first.numOfRows, new double[this.first.numOfRows][this.first.numOfCols]);
+		Matrix result = new Matrix(this.first.numOfRows, this.first.numOfCols);
 		for(int i = 0; i < this.first.numOfRows; i++) {
 			for(int j = 0; j < this.first.numOfCols; j++) {
 				result.elements[i][j] = this.first.elements[i][j] + this.second.elements[i][j];
@@ -63,7 +63,7 @@ public class BinaryOperationsTwoMatrices {
 		if(this.first.numOfRows != this.second.numOfRows || this.first.numOfCols != this.second.numOfCols) {
 			// baci neki exception -> poslije
 		}
-		Matrix result = new Matrix(this.first.numOfCols, this.first.numOfRows, new double[this.first.numOfRows][this.first.numOfCols]);
+		Matrix result = new Matrix(this.first.numOfRows, this.first.numOfCols);
 		for(int i = 0; i < this.first.numOfRows; i++) {
 			for(int j = 0; j < this.first.numOfCols; j++) {
 				result.elements[i][j] = this.first.elements[i][j] - this.second.elements[i][j];
@@ -99,7 +99,7 @@ public class BinaryOperationsTwoMatrices {
 		}
 		*/
 		try {
-			return MultiThreadMatrixProduct.Multiply(first,second);
+			return MultiThreadMatrixProduct.Multiply(new Matrix(first), new Matrix(second));
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block //dodano
 			e.printStackTrace();

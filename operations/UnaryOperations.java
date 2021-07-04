@@ -14,13 +14,15 @@ import rowmultithread.AddRowsToRows;
  */
 public class UnaryOperations {
 	protected Matrix matrix;
+	protected Matrix unchanged;
 	
 	/**
 	 * Constructs an object used for calculations
 	 * @param a represents a matrix used in calculations
 	 */
 	public UnaryOperations(Matrix a) {
-		this.matrix = a;
+		this.matrix = new Matrix(a);
+		this.unchanged = new Matrix(a);
 	}
 	
 	/**
@@ -36,6 +38,10 @@ public class UnaryOperations {
 		// stvaranje pivotne matrice, ima m redaka, 1 stupac
 		double[][] piv_elem = new double[m][1];
 		double[][] L_elem = new double[m][m];
+		
+		this.matrix = new Matrix(this.unchanged);
+		
+		System.out.println("Matrica prije poziva LU "+this.matrix);
 		int piv, piv_sign = 1;
 		// debugg
 		//System.out.println("piv_elem.len = "+piv_elem.length);
@@ -49,7 +55,7 @@ public class UnaryOperations {
 			//System.out.println("redak: "+i+" od "+m);
 		}
 		Matrix L = new Matrix( m, m, L_elem );
-		Matrix pivot = new Matrix( 1, m, piv_elem );
+		Matrix pivot = new Matrix( m, 1, piv_elem );
 		for( int i = 0; i < m; i++)
 		{
 			
@@ -101,23 +107,31 @@ public class UnaryOperations {
 				t[j].join();
 		}
 		
+		
 		ArrayList<Matrix> result = new ArrayList<Matrix>();
 		// vracamo P * L * matrix
 		//System.out.println("pivot je "+pivot);
-		result.add(pivot);  result.add(L); result.add(matrix);
+		double[][] piv_sign_array = new double[1][1];
+		piv_sign_array[0][0] = piv_sign;
+		Matrix pivot_sign = new Matrix (1,1,piv_sign_array);
+		result.add(pivot);  result.add(L); result.add(this.matrix);
+		result.add( pivot_sign);
 		// debugg
 		//System.out.println("A = P*LU");
 		//System.out.println("P:"+pivot+"\n"+"L:"+L+"\n"+"U:"+matrix+"\n");
+				
 		return result;
 	}
 	
 	/**
 	 * Calculates the trace of the given matrix
 	 * @return the trace of the matrix
+	 * @throws SquareMatrixException 
 	 */
-	public double trace() {
+	public double trace() throws SquareMatrixException {
+		this.matrix = new Matrix(this.unchanged);
 		if(this.matrix.numOfCols != this.matrix.numOfRows) {
-			// baci neki exception
+			throw new SquareMatrixException("trace");
 		}
 		double trace = 0;
 		for(int i = 0; i < this.matrix.numOfCols; i++) {
@@ -135,6 +149,7 @@ public class UnaryOperations {
 	public int rank() throws MatrixDimensionException, InterruptedException {
 		// algoritam koji koristima o i pri rucnom racunanju, osim sto ne radim zaprave ponistavanja
 		// u retku, ali ponasam se kao da jesam
+		this.matrix = new Matrix(this.unchanged);
 		int min = Math.min(this.matrix.numOfCols, this.matrix.numOfRows), rank;
 		rank = min;
 		//System.out.println("Metoda rank: \n rank = "+rank);
@@ -175,6 +190,7 @@ public class UnaryOperations {
 	 * @throws InterruptedException 
 	 */
 	public double determinant2() throws MatrixDimensionException, InterruptedException {
+		this.matrix = new Matrix(this.unchanged);
 		if(this.matrix.numOfCols != this.matrix.numOfRows) {
 			// baci neki exception
 		}
@@ -182,7 +198,13 @@ public class UnaryOperations {
 		double det = 1.0;
 		for( int i = 0; i < this.matrix.numOfCols; i++ )
 			det *= LU.get(2).elements[i][i];
-		return det;
+		/*
+		System.out.println(LU.get(3).elements[0][0]);
+		System.out.println(LU.get(0));
+		System.out.println(LU.get(1));
+		System.out.println(LU.get(2));
+		*/
+		return det * LU.get(3).elements[0][0];
 	}
 	
 	/**
@@ -191,6 +213,7 @@ public class UnaryOperations {
 	 * @throws SquareMatrixException 
 	 */
 	public double determinant() throws SquareMatrixException {
+		this.matrix = new Matrix(this.unchanged);
 		if(this.matrix.numOfCols != this.matrix.numOfRows) {
 			throw new SquareMatrixException("determinant");
 		}
@@ -198,6 +221,7 @@ public class UnaryOperations {
 	}
 	
 	private void getCofactor(double mat[][], double temp[][], int p, int q, int n) {
+		this.matrix = new Matrix(this.unchanged);
 		int i = 0, j = 0;
 		
 		// Looping for each element of the matrix
