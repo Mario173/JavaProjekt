@@ -5,6 +5,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -752,7 +753,7 @@ public class App {
 			buttons[curr2 + 2].addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					insert.insertFromDatabase();
+					makeDatabaseChooserWindow(newWindow, curr2 == 0);
 					Label tick = new Label(newWindow, SWT.NONE);
 					Rectangle rect = buttons[curr2 + 2].getBounds();
 					tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
@@ -840,7 +841,7 @@ public class App {
 		btn3.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				insert.insertFromDatabase();
+				makeDatabaseChooserWindow(newWindow, true);
 				Label tick = new Label(newWindow, SWT.NONE);
 				Rectangle rect = btn3.getBounds();
 				tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
@@ -956,7 +957,7 @@ public class App {
 		btn3.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				insert.insertFromDatabase(); // povuci iz baze, vjer drugacije
+				makeDatabaseChooserWindow(newWindow, true);
 				Label tick = new Label(newWindow, SWT.NONE);
 				Rectangle rect = btn3.getBounds();
 				tick.setBounds(rect.x + rect.width + 5, rect.y, 25, 25);
@@ -997,5 +998,62 @@ public class App {
 				}
 			}
 		});
+	}
+	
+	
+	public void makeDatabaseChooserWindow(Shell newWindow, boolean firstMatrix) {
+		Shell DBWindow = new Shell(SWT.SHELL_TRIM & (~SWT.RESIZE));
+		Display display = Display.getDefault();
+		
+		DBWindow.setBounds(220, 220, 550, 650);
+		DBWindow.setText("Choose from database");
+		
+		List<Matrix> all = db.selectAll();
+		Button[] rbtns = new Button[all.size()];
+		
+		Label hover = new Label(DBWindow, SWT.NONE);
+		hover.setBounds(5, 5, 520, 30);
+		hover.setText("Hover over the buttons to see the matrices! Click \"Choose\" to choose one:");
+		
+		for(int i = 0; i < all.size(); i++) {
+			rbtns[i] = new Button(DBWindow, SWT.RADIO);
+			rbtns[i].setBounds(5 + (i % 2) * 250, 30 + (i / 2) * 45, 200, 30);
+			rbtns[i].setText("Matrix number " + (i + 1));
+			rbtns[i].setToolTipText(all.get(i).toString());
+			rbtns[i].setSelection(false);
+			int k = i;
+			
+			rbtns[i].addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if(firstMatrix) {
+						first = all.get(k);
+					} else {
+						second = all.get(k);
+					}
+				}
+			});
+		}
+		
+		Button choose = new Button(DBWindow, SWT.NONE);
+		choose.setBounds(200, 550, 130, 30);
+		choose.setText("Choose");
+		choose.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent evt) {
+				DBWindow.close();
+			}
+		});
+        
+		DBWindow.open();
+		DBWindow.layout();
+		while (!DBWindow.isDisposed()) {
+			//newWindow.setEnabled(false); // main window not clickable while this window is opened
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
+		newWindow.setEnabled(true);
+		newWindow.setActive();
 	}
 }
