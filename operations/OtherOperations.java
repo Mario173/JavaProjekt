@@ -13,7 +13,6 @@ import exceptions.*;
  */
 public class OtherOperations {
 	protected Matrix matrix;
-	protected double[] polynomial;
 	protected double[] vector;
 	
 	/**
@@ -23,7 +22,7 @@ public class OtherOperations {
 	 */
 	public OtherOperations(Matrix A, double[] p) {
 		this.matrix = A;
-		this.polynomial = p;
+		this.vector = p;
 	}
 	
 	/**
@@ -31,17 +30,27 @@ public class OtherOperations {
 	 * @return the resulting matrix 
 	 * @throws SquareMatrixException if the matrix is not square
 	 */
-	public Matrix calculatePolynomialValue() throws SquareMatrixException {
+	public Matrix calculatePolynomialValue() throws SquareMatrixException, MatrixDimensionException, ImpermissibleExponentException {
 		// polynomial
 		if(this.matrix.numOfCols != this.matrix.numOfRows) {
 			throw new SquareMatrixException("calculate polynomial");
 		}
-		double[][] zero = {};
-		Matrix result = new Matrix(this.matrix.numOfCols, this.matrix.numOfRows, zero);
-		for(int i = 0; i < this.polynomial.length; i++) {
-			MatrixAndScalarOperations pot = new MatrixAndScalarOperations(this.matrix, i);
+		double[][] zero = new double[this.matrix.numOfRows][this.matrix.numOfCols];
+		Matrix result = new Matrix(this.matrix.numOfRows, this.matrix.numOfCols, zero);
+		
+		for(int j = 0; j < this.polynomial.length; j++) {
+			System.out.println(this.polynomial[j]);
+		}
+		
+		for(int i = this.vector.length - 1; i >= 0; i--) {
+			if(polynomial[i] == 0) {
+				continue;
+			}
+			Matrix help = new Matrix(this.matrix.numOfRows, this.matrix.numOfCols, this.matrix.elements);
+			MatrixAndScalarOperations pot = new MatrixAndScalarOperations(help, i);
 			pot.matrix = pot.potentiate();
-			pot.scalar = this.polynomial[i];
+			pot.scalar = this.vector[i];
+			System.out.println(result.numOfRows + " " + pot.scalar().numOfRows);
 			BinaryOperationsTwoMatrices add = new BinaryOperationsTwoMatrices(result, pot.scalar());
 			result = add.add();
 		}
