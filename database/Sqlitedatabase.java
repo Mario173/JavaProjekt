@@ -70,7 +70,7 @@ public class Sqlitedatabase {
 	public List<Matrix> selectAll() {
 		
 		String sql = "SELECT id, name, n_rows, n_columns, datetime, elements "
-				+ "FROM matrices ORDER BY datetime;";
+				+ "FROM matrices ORDER BY datetime LIMIT 10;";
 		
 		List<Matrix> MatrixList = new ArrayList<Matrix>();
 		
