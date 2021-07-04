@@ -2,6 +2,7 @@ package operations;
 
 import matrix.Matrix;
 
+import exceptions.*;
 /**
  * Class containing implementations for all binary operations where both operands are matrices.
  * @author Mario
@@ -41,10 +42,11 @@ public class BinaryOperationsTwoMatrices {
 	/**
 	 * Adds given matrices.
 	 * @return the sum of given matrices
+	 * @throws MatrixDimensionException 
 	 */
-	public Matrix add() {
+	public Matrix add() throws MatrixDimensionException {
 		if(this.first.numOfRows != this.second.numOfRows || this.first.numOfCols != this.second.numOfCols) {
-			// baci neki exception -> poslije
+			throw new MatrixDimensionException("add");
 		}
 		Matrix result = new Matrix(this.first.numOfRows, this.first.numOfCols);
 		for(int i = 0; i < this.first.numOfRows; i++) {
@@ -58,10 +60,11 @@ public class BinaryOperationsTwoMatrices {
 	/**
 	 * Subtracts given matrices.
 	 * @return the difference of the given matrices
+	 * @throws MatrixDimensionException 
 	 */
-	public Matrix subtract() {
+	public Matrix subtract() throws MatrixDimensionException {
 		if(this.first.numOfRows != this.second.numOfRows || this.first.numOfCols != this.second.numOfCols) {
-			// baci neki exception -> poslije
+			throw new MatrixDimensionException("substract");
 		}
 		Matrix result = new Matrix(this.first.numOfRows, this.first.numOfCols);
 		for(int i = 0; i < this.first.numOfRows; i++) {
@@ -76,13 +79,14 @@ public class BinaryOperationsTwoMatrices {
 	 * Multiplies given matrices.
 	 * @return the product of the given matrices
 	 * uses standard linear algorithm 
+	 * @throws MatrixDimensionException 
 	 */
-	public Matrix multiply() {
+	public Matrix multiply() throws MatrixDimensionException {
 		// multiply the matrices
 		// if matrices aren't chained throw an exception -> number of colums of first equal to num of rows of second matrix
 		if( this.first.numOfCols != this.second.numOfRows )
 		{
-			//izbaci neki exception jer nisu amtrice ulancane
+			throw new MatrixDimensionException("multiplication");
 		}
 		/*Matrix result = new  Matrix(this.first.numOfCols, this.second.numOfRows, new double[this.first.numOfRows][this.second.numOfCols]);
 		for( int i = 0; i < result.numOfRows; i++ )

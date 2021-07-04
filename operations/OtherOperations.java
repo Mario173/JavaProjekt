@@ -29,11 +29,13 @@ public class OtherOperations {
 	 * Method used for finding the value of the given polynomial in a given matrix
 	 * @return the resulting matrix 
 	 * @throws SquareMatrixException if the matrix is not square
+	 * @throws MatrixDimensionException 
+	 * @throws ImpermissibleExponentException 
 	 */
 	public Matrix calculatePolynomialValue() throws SquareMatrixException, MatrixDimensionException, ImpermissibleExponentException {
 		// polynomial
 		if(this.matrix.numOfCols != this.matrix.numOfRows) {
-			throw new SquareMatrixException("calculate polynomial");
+			throw new MatrixDimensionException("polynomial");
 		}
 		double[][] zero = new double[this.matrix.numOfRows][this.matrix.numOfCols];
 		Matrix result = new Matrix(this.matrix.numOfRows, this.matrix.numOfCols, zero);
@@ -60,8 +62,11 @@ public class OtherOperations {
 	/**
 	 * Method used for solving linear system of equations
 	 * @return the matrix containing the solution
+	 * @throws MatrixDimensionException 
+	 * @throws InterruptedException 
+	 * @throws SquareMatrixException 
 	 */
-	public double[] solveLinearSystem() {
+	public double[] solveLinearSystem() throws MatrixDimensionException, InterruptedException, SquareMatrixException {
 		int n = matrix.numOfRows;
 		//double[][] solutions = new double[n][1];
 		UnaryOperations Unar = new UnaryOperations(matrix);

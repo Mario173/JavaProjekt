@@ -129,8 +129,12 @@ public class App {
 					res = new Matrix(0,0);
 				} else {
 					BinaryOperationsTwoMatrices b = new BinaryOperationsTwoMatrices(first, second);
-					res = b.add();
-					makeLabel("You added two matrices:\n", 2);
+					try {
+						res = b.add();
+						makeLabel("You added two matrices:\n", 2);
+					} catch (MatrixDimensionException e1) {
+						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
+					}
 					first = second = new Matrix(0,0);
 				}
 			}
@@ -148,8 +152,12 @@ public class App {
 					res = new Matrix(0,0);
 				} else {
 					BinaryOperationsTwoMatrices b = new BinaryOperationsTwoMatrices(first, second);
-					res = b.subtract();
-					makeLabel("You subtracted two matrices:\n", 2);
+					try {
+						res = b.subtract();
+						makeLabel("You subtracted two matrices:\n", 2);
+					} catch (MatrixDimensionException e1) {
+						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
+					}
 					first = second = new Matrix(0,0);
 				}
 			}
@@ -354,12 +362,25 @@ public class App {
 					OtherOperations o = new OtherOperations(first, polynomialOrLinSysb);
 					try {
 						double[] vect = o.solveLinearSystem();
-						String s = "Solve linear system:\n";
-						s += "The resulting vector is:\n";
-						s += Arrays.toString(vect);
+						String temp = "Solve linear system:\n";
+						temp += "The matrix used in this operation is:\n";
+						for(int i = 0; i < first.numOfRows; i++) {
+							for(int j = 0; j < first.numOfCols; j++) {
+								temp += String.format("%.2f", first.elements[i][j]);
+								temp += " ";
+							}
+							temp += "\n";
+						}
+						temp += "The vector used is:\n";
+						for(int i = 0; i < polynomialOrLinSysb.length; i++) {
+							temp += (String.format("%.2f", polynomialOrLinSysb[i]) + " ");
+						}
+						temp += "\n";
+						temp += "The resulting vector is:\n";
+						temp += Arrays.toString(vect);
 						
-						lblText.setText(s);
-					} catch (MatrixDimensionException | InterruptedException e1) {
+						lblText.setText(temp);
+					} catch (SquareMatrixException | MatrixDimensionException | InterruptedException e1) {
 						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
 					}
 					first = new Matrix(0,0);
@@ -494,7 +515,7 @@ public class App {
 	 * Make the label for the result
 	 */
 	public void makeLabel(String temp, int whichOperation) {
-		lblText.setBounds(300, 70, Math.max(400, 30 * res.numOfCols), 2 * Math.max(200, 30 * (res.numOfRows + 1)));
+		lblText.setBounds(300, 70, Math.max(400, 30 * res.numOfCols), Math.max(200, 30 * (res.numOfRows + 1)));
 		
 		switch(whichOperation) {
 			case 1:
@@ -548,6 +569,7 @@ public class App {
 				for(int i = 0; i < this.polynomialOrLinSysb.length; i++) {
 					temp += (String.format("%.2f", this.polynomialOrLinSysb[i]) + " ");
 				}
+				temp += "\n";
 				break;
 			case 4:
 				temp += "The matrix used in this operation is:\n";

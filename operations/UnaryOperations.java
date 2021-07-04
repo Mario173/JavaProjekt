@@ -188,11 +188,12 @@ public class UnaryOperations {
 	 * @return the determinant of the given matrix
 	 * @throws MatrixDimensionException 
 	 * @throws InterruptedException 
+	 * @throws SquareMatrixException 
 	 */
-	public double determinant2() throws MatrixDimensionException, InterruptedException {
+	public double determinant2() throws MatrixDimensionException, InterruptedException, SquareMatrixException {
 		this.matrix = new Matrix(this.unchanged);
 		if(this.matrix.numOfCols != this.matrix.numOfRows) {
-			// baci neki exception
+			throw new SquareMatrixException("determinant");
 		}
 		ArrayList<Matrix> LU = LUDecomposition();
 		double det = 1.0;
@@ -310,7 +311,7 @@ public class UnaryOperations {
 		{
 			throw new SquareMatrixException("Nije kvadratna");
 		}
-		int n= matrix.numOfCols, i, j, k ;		
+		int n= matrix.numOfCols, i, j;		
 		
 		// ajmo probat naivni gaussov nacin - u biti on se cini dosta zgodan za visedretvenost?
 		double[][] elem_inv = new double[n][n];
