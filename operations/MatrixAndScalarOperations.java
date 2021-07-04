@@ -2,6 +2,7 @@ package operations;
 
 import java.util.ArrayList;
 
+import exceptions.ImpermissibleExponentException;
 import exceptions.MatrixDimensionException;
 import exceptions.SquareMatrixException;
 import matrix.Matrix;
@@ -44,14 +45,19 @@ public class MatrixAndScalarOperations {
 	 * @return the resulting matrix
 	 * @throws SquareMatrixException if the given matrix is not square
 	 * @throws MatrixDimensionException 
+	 * @throws ImpermissibleExponentException 
 	 */
-	public Matrix potentiate() throws SquareMatrixException, MatrixDimensionException {
+	public Matrix potentiate() throws SquareMatrixException, MatrixDimensionException, ImpermissibleExponentException {
 		// potentiate the matrix on the given potention
 		if(this.matrix.numOfCols != this.matrix.numOfRows) {
 			throw new SquareMatrixException("the power of the matrix");
 		}
 		ArrayList<Integer> howToExp = new ArrayList<>();
 		int exp = (int) this.scalar;
+		
+		if(exp < 0 || exp > 15) {
+			throw new ImpermissibleExponentException();
+		}
 		
 		if(exp == 0) {
 			double[][] temp = new double[this.matrix.numOfRows][this.matrix.numOfCols];
@@ -66,7 +72,6 @@ public class MatrixAndScalarOperations {
 			}
 			return new Matrix(this.matrix.numOfRows, this.matrix.numOfCols, temp);
 		}
-		
 		while(exp != 0) {
 			howToExp.add(exp % 2);
 			exp /= 2;

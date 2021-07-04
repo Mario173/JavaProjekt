@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Text;
 import exceptions.MatrixDimensionException;
 import exceptions.SquareMatrixException;
 import exceptions.WrongInsertException;
+import exceptions.ImpermissibleExponentException;
 import matrix.Matrix;
 import operations.BinaryOperationsTwoMatrices;
 import operations.MatrixAndScalarOperations;
@@ -207,7 +208,7 @@ public class App {
 					try {
 						res = s.potentiate();
 						makeLabel("You multiplied a matrix n times:\n", 4);
-					} catch (SquareMatrixException | MatrixDimensionException e1) {
+					} catch (SquareMatrixException | MatrixDimensionException | ImpermissibleExponentException e1) {
 						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
 					}
 					first = new Matrix(0,0);
@@ -216,7 +217,7 @@ public class App {
 		});
 		btnPotentiate.setBounds(5 * (shlMatrixCalculator.getSize().x - 20) / 7, 0, (shlMatrixCalculator.getSize().x - 20) / 7, 30);
 		btnPotentiate.setText("A^n");
-		btnPotentiate.setToolTipText("Calculate A^n, where A is a matrix and n is a natural number between 1 and 15");
+		btnPotentiate.setToolTipText("Calculate A^n, where A is a matrix and n is a natural number between 0 and 15");
 		
 		Button btnPolynomial = new Button(shlMatrixCalculator, SWT.NONE);
 		btnPolynomial.addSelectionListener(new SelectionAdapter() {
@@ -230,7 +231,7 @@ public class App {
 					try {
 						res = o.calculatePolynomialValue();
 						makeLabel("The resulting value is:\n", 3);
-					} catch (SquareMatrixException | MatrixDimensionException e1) {
+					} catch (SquareMatrixException | MatrixDimensionException | ImpermissibleExponentException e1) {
 						MessageDialog.openError(shlMatrixCalculator, "Error", e1.getMessage());
 					}
 					first = new Matrix(0,0);
