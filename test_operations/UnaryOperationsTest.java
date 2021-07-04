@@ -1,6 +1,6 @@
 package test_operations;
 
-import static org.junit.Assert.*;
+//import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
@@ -15,7 +15,7 @@ import exceptions.MatrixDimensionException;
 import exceptions.SquareMatrixException;
 import exceptions.MatrixIsSingularException;
 import matrix.Matrix;
-import operations.MatrixAndScalarOperations;
+//import operations.MatrixAndScalarOperations;
 import operations.UnaryOperations;
 
 public class UnaryOperationsTest {

@@ -1,6 +1,6 @@
 package test_operations;
 
-import static org.junit.Assert.*;
+//import static org.junit.Assert.*;
 
 import org.eclipse.core.runtime.Assert;
 import org.junit.After;
@@ -35,7 +35,6 @@ public class MatrixAndScalarOperationsTest {
 
 	@Test
 	public void testMatrixAndScalarOperations() {
-		fail("Not yet implemented");
 		double[][] elem1 = {{1,2},{3,4}}; Matrix A = new Matrix(2,2,elem1);
 		double[][] eres = {{1,2},{3,4}}; Matrix expResult = new Matrix(2,2, eres);
 		double scal = 1;
@@ -60,9 +59,9 @@ public class MatrixAndScalarOperationsTest {
 		System.out.println("Provjera matrix i scalar operacije potenciranja");
 		double[][] elem1 = {{2,0},{0,4}}; Matrix A = new Matrix(2,2,elem1);
 		double[][] eres = {{4,0},{0,16}};
-		double[][] eres2 = {{1,0},{0,1}};
+		//double[][] eres2 = {{1,0},{0,1}};
 		double scal = 2;
-		Matrix expResult = new Matrix(2,2, eres), expResult2 = new Matrix(2,2, eres2);
+		Matrix expResult = new Matrix(2,2, eres); //expResult2 = new Matrix(2,2, eres2);
 		MatrixAndScalarOperations result = new MatrixAndScalarOperations(A,scal);
 		Assert.isTrue( !( expResult.equals(result.potentiate()) ) );
 		System.out.println("Potenciranje funkcionira");

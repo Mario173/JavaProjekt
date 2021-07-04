@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import exceptions.MatrixDimensionException;
 
-import org.junit.Assert.*;
+//import org.junit.Assert.*;
 
 import matrix.Matrix;
 import operations.BinaryOperationsTwoMatrices;

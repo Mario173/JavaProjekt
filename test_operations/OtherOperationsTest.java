@@ -1,6 +1,6 @@
 package test_operations;
 
-import static org.junit.Assert.*;
+//import static org.junit.Assert.*;
 
 import org.eclipse.core.runtime.Assert;
 import org.junit.After;
@@ -14,7 +14,7 @@ import exceptions.MatrixDimensionException;
 import exceptions.SquareMatrixException;
 import exceptions.MatrixIsSingularException;
 import matrix.Matrix;
-import operations.MatrixAndScalarOperations;
+//import operations.MatrixAndScalarOperations;
 import operations.OtherOperations;
 
 public class OtherOperationsTest {

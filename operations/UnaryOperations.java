@@ -42,7 +42,7 @@ public class UnaryOperations {
 		
 		this.matrix = new Matrix(this.unchanged);
 		
-		System.out.println("Matrica prije poziva LU "+this.matrix);
+		//System.out.println("Matrica prije poziva LU "+this.matrix);
 		int piv, piv_sign = 1;
 		// debugg
 		//System.out.println("piv_elem.len = "+piv_elem.length);
